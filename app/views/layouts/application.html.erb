@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  <!-- 使用するHTMLのバージョンをブラウザに対して宣言している -->
 <html>
   <head>
-    <title>HelloApp</title>
+    <!-- full_title(カスタムヘルパー) -->
+    <title><%= full_title(yield(:title)) %></title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,6 +10,6 @@
   </head>
 
   <body>
-    <%= yield %>
+    <%= yield %>  <!-- 各viewの内容がここに挿入される -->
   </body>
 </html>

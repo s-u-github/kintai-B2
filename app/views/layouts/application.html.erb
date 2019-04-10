@@ -7,9 +7,14 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
+    <%= render 'layouts/shim' %>  <!-- HTML shimがこの１行で済む -->
   </head>
 
   <body>
-    <%= yield %>  <!-- 各viewの内容がここに挿入される -->
+    <%= render 'layouts/header' %>  <!--headerがこの１行で済む -->
+    <div class="container">
+      <%= yield %>  <!-- 各viewの内容がここに挿入される -->
+    </div>
   </body>
 </html>

@@ -1,0 +1,12 @@
+<header class="navbar navbar-fixed-top navbar-inverse">  <!--headerタグ 3つのクラスはBootStrapによって意味が与えられる -->
+  <div class="container">  <!-- divタグ これもBootStrapによって意味が与えられる -->
+    <%= link_to "勤怠システムB2", root_path, id: "logo" %>  <!-- classはページ内でなんども使えるが、idは一度しか使えない -->
+                                                      <!-- id:"logo"はオプションとなり、今回の場合はCSS idでlogoと指定している -->
+    <nav>
+      <ul class="nav navbar-nav navbar-right">
+        <li><%= link_to "ホーム", root_path %></li>
+        <li><%= link_to "ログイン", '#' %></li>
+      </ul>
+    </nav>
+  </div>
+</header>

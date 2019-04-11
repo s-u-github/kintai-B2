@@ -1,0 +1,12 @@
+<% if @user.errors.any? %>  <!-- @userオブジェクトに対してエラーが発生しているかどうかの条件式 発生していれば真-->
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@user.errors.count, "error") %>.  <!-- @userオブジェクトに対するエラー件数を返す -->
+    </div>                                                              <!-- pluralizeメソッドは、英語専用のテキストヘルパー -->
+    <ul>
+    <% @user.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+     <% end %>
+    </ul>
+  </div>
+<% end %>

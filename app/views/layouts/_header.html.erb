@@ -5,7 +5,24 @@
     <nav>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "ホーム", root_path %></li>
-        <li><%= link_to "ログイン", '#' %></li>
+        <% if logged_in? %>  <!--sessionsヘルパーメソッド-->
+          <li><%= link_to "ユーザ一覧", '#' %></li>
+          <li class="dropdown">  <!-- Bootstrapクラスでレイアウト変更。有効化するため、JavaScriptとjQeryを読み込む指定をする(application.js)-->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              アカウント <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "ユーザー勤怠情報表示", current_user %></li>
+              <li><%= link_to "設定", '#' %></li>
+              <li class="divider"></li>
+              <li>
+                <%= link_to "ログアウト", logout_path, method: :delete %>
+              </li>
+            </ul>
+          </li>
+        <% else %>
+          <li><%= link_to "ログイン", login_path %></li>
+        <% end %>
       </ul>
     </nav>
   </div>

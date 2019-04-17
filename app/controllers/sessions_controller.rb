@@ -12,6 +12,8 @@ class SessionsController < ApplicationController
     # 有効なユーザーで、かつパスワードの認証に成功した場合のみtrueになる
     if user && user.authenticate(params[:session][:password])
       log_in user
+      # sessionsヘルパーメソッド
+      redirect_back_or user
       redirect_to user
     else
       flash.now[:danger] = 'メールアドレスとパスワードの情報が一致しませんでした。'

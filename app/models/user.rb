@@ -9,6 +9,6 @@ class User < ApplicationRecord
   validates :email, presence: true, length: { maximum: 100}, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
 # password_digestカラムとbcrpt gemを追加したことで使用可能になった
   has_secure_password
-# パスワードの存在性と最小文字数の検証
-  validates :password, presence: true, length: { minimum: 6 }
+# パスワードの存在性と最小文字数の検証、allow_nilでパスワードを入力していない場合は検証をスルーして更新
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 end

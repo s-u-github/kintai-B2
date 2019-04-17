@@ -13,7 +13,7 @@
             </a>
             <ul class="dropdown-menu">
               <li><%= link_to "ユーザー勤怠情報表示", current_user %></li>
-              <li><%= link_to "設定", '#' %></li>
+              <li><%= link_to "設定", edit_user_path(current_user) %></li>  <!-- 現在のユーザー情報が取得できるようcurrent_userを引数で渡している -->
               <li class="divider"></li>
               <li>
                 <%= link_to "ログアウト", logout_path, method: :delete %>

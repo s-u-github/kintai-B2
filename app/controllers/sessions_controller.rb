@@ -14,7 +14,6 @@ class SessionsController < ApplicationController
       log_in user
       # sessionsヘルパーメソッド
       redirect_back_or user
-      redirect_to user
     else
       flash.now[:danger] = 'メールアドレスとパスワードの情報が一致しませんでした。'
       render 'new'

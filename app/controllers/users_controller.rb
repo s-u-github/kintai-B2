@@ -1,8 +1,16 @@
 class UsersController < ApplicationController
   # ログイン済みでなければ実行できない
-  before_action :logged_in_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update]
   # 正しいユーザーでなければ実行できない
   before_action :correct_user,   only: [:edit, :update]
+  # 管理者でなければ実行できない
+  before_action :admin_user,     only: [:destroy]
+  
+  # ユーザー一覧ページ
+  def index
+    # paginateメソッドの働きで、ユーザーのページネーションが行えるようになる。paramsの:pageはビューに記述したwill_paginateで自動生成される
+    @users = User.paginate(page: params[:page])
+  end
   
   # ユーザー勤怠画面
   def show
@@ -37,6 +45,7 @@ class UsersController < ApplicationController
     # @user = User.find(params[:id])
   end
   
+  # ユーザーの更新
   def update
     # correct_userで定義したため削除していい
     # @user = User.find(params[:id])
@@ -47,6 +56,13 @@ class UsersController < ApplicationController
     else
       render 'edit'
     end
+  end
+  
+  # ユーザーの削除
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "削除しました。"
+    redirect_to users_url
   end
   
   private
@@ -73,5 +89,10 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       # 後付けif文の構成と一緒で、条件式がfalseの場合のみ、冒頭のコードが実行される、current_user?はsessonヘルパーメソッド
       redirect_to(root_url) unless current_user?(@user)
+    end
+    
+    # 管理者かどうか確認
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
     end
 end

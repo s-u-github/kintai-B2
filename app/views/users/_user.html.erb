@@ -1,0 +1,7 @@
+<li>
+  <%= link_to user.name, user %>
+  <!-- 現在のユーザーが管理者(admin属性がtrue)の場合に限り -->
+  <% if current_user.admin? && !current_user?(user) %>
+    |  <%= link_to "削除", user, method: :delete, data: { confirm: "削除してよろしいですか？" } %>
+  <% end %>
+</li>

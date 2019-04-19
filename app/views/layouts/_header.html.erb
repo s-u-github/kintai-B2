@@ -6,7 +6,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "ホーム", root_path %></li>
         <% if logged_in? %>  <!--sessionsヘルパーメソッド-->
-          <li><%= link_to "ユーザ一覧", '#' %></li>
+          <li><%= link_to "ユーザ一覧", users_path %></li>
           <li class="dropdown">  <!-- Bootstrapクラスでレイアウト変更。有効化するため、JavaScriptとjQeryを読み込む指定をする(application.js)-->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               アカウント <b class="caret"></b>

@@ -1,15 +1,18 @@
 source 'https://rubygems.org'
 
-gem 'rails',          '5.1.6'
-gem 'bcrypt',         '3.1.12'  # has_secure_passwordを使ってパスワードをハッシュ化するため
-gem 'bootstrap-sass', '3.3.7'   # bootstrapを使用するため
-gem 'puma',           '3.9.1'
-gem 'sass-rails',     '5.0.6'
-gem 'uglifier',       '3.2.0'
-gem 'coffee-rails',   '4.2.2'
-gem 'jquery-rails',   '4.3.1'
-gem 'turbolinks',     '5.0.1'
-gem 'jbuilder',       '2.7.0'
+gem 'rails',                    '5.1.6'
+gem 'bcrypt',                   '3.1.12'  # has_secure_passwordを使ってパスワードをハッシュ化するため
+gem 'faker',                    '1.7.3'   # サンプルユーザーを作成してくれる
+gem 'will_paginate',            '3.1.6'   # ページネーション機能を使えるようになる
+gem 'bootstrap-will_paginate',  '1.0.0'   # ページネーションのデザインをお手軽にできる
+gem 'bootstrap-sass',           '3.3.7'   # bootstrapを使用するため
+gem 'puma',                     '3.9.1'
+gem 'sass-rails',               '5.0.6'
+gem 'uglifier',                 '3.2.0'
+gem 'coffee-rails',             '4.2.2'
+gem 'jquery-rails',             '4.3.1'
+gem 'turbolinks',               '5.0.1'
+gem 'jbuilder',                 '2.7.0'
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'

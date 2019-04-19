@@ -1,0 +1,19 @@
+<% provide(:title, '一覧') %>
+<h1>ユーザ一覧</h1>
+
+<!-- ページネーションを動作させる -->
+<%= will_paginate %>
+
+<ul class="users">
+  <!-- @users.each do |user| -->
+     <!-- 引数のuserはブロック変数のuserを指している。この場合、Railsでは自動的に_user.html.erbを探してくれる。 -->
+     <!-- render @users -->
+  <!-- end --> <!-- eachメソッドすら省略したリファクタリングが下　-->
+  
+  <!-- Railsが自動的に@usersの値を評価し、それぞれのユーザーを_user.html.erbパーシャルで出力してくれる-->
+  <%= render @users %>
+  
+</ul>
+
+<!-- ページネーションを動作させる -->
+<%= will_paginate %>

@@ -1,5 +1,6 @@
 User.create!(name:  "管理者",
              email: "email@sample.com",
+             department: "管理部",
              password:              "password",
              password_confirmation: "password",
              admin: true)

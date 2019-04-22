@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   # 正しいユーザーでなければ実行できない
   before_action :correct_user,   only: [:edit, :update]
   # 管理者でなければ実行できない
-  before_action :admin_user,     only: [:destroy]
+  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info]
   
   # ユーザー一覧ページ
   def index
@@ -65,11 +65,31 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  # 基本情報編集ページ
+  def edit_basic_info
+    @user = User.find(params[:id])  
+  end
+  
+  # 基本情報編集の更新
+  def update_basic_info
+    @user = User.find(params[:id])
+    if @user.update_attributes(basic_info_params)
+      flash[:success] = "基本情報を更新しました。"
+      redirect_to @user
+    else
+      render 'edit_basic_info'
+    end
+  end
+  
   private
   
     # Strong Parameters 必須となるパラメータと許可されたパラメータを指定することができる。
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+    end
+    
+    def basic_info_params
+      params.require(:user).permit(:basic_time, :work_time)
     end
   
     # beforeアクション

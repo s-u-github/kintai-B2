@@ -2,6 +2,8 @@
   <%= link_to user.name, user %>
   <!-- 現在のユーザーが管理者(admin属性がtrue)の場合に限り -->
   <% if current_user.admin? && !current_user?(user) %>
+       <!-- URLの/edit-basic-info/:idの:idの部分にあたるユーザーIDが必要となるので_pathにパラメータを付与する -->
+    |  <%= link_to "基本情報編集", basic_info_path(user) %>
     |  <%= link_to "削除", user, method: :delete, data: { confirm: "削除してよろしいですか？" } %>
   <% end %>
 </li>

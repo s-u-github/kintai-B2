@@ -21,5 +21,8 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   
 # usersリソース
-  resources :users
+  resources :users do
+    # 勤怠情報を保存する
+    resources :attendances, only: :create #リソースをネストしていることで/users/:user_id/attendanceというURLになる。
+  end
 end

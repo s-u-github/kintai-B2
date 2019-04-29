@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+# 1対多の関連性を示す。又、ユーザーが削除された時に関連する勤怠情報も同様に削除されるよう設定している
+  has_many :attendances, dependent: :destroy
 # コールバックメソッド 保存される前に現在のメールアドレスの値を小文字にする。又、selfは現在のユーザーを指している
   before_save { self.email = email.downcase }
 # nameカラムの存在性と最大文字数を検証

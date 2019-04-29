@@ -3,18 +3,100 @@
 <div>
   <table class="table-bordered table-condensed">
     <tr>
-      <td>時間管理表</td>
+      <td>
+        <!-- 前月の情報をパラメータとして送信している -->
+        <%= link_to '←', user_path(params: {id: @user.id, first_day: @first_day.prev_month}), class: "btn btn-xs btn-primary" %>
+        &emsp; <%= @first_day.to_s(:year_month) %> 時間管理表&emsp;
+        <!-- 次月の情報をパラメータとして送信している -->
+        <%= link_to '→', user_path(params: {id: @user.id, first_day: @first_day.next_month}), class: "btn btn-xs btn-primary" %>
+      </td>
       <td>指定勤務時間 <%= format_basic_time(@user.work_time) %></td> <!-- usersヘルパーメソッド使用 -->
       <td>基本時間 <%= format_basic_time(@user.basic_time) %></td>
-      <td>月の初日</td>
+      <td>初日 <%= @first_day.to_s(:date) %></td>
     </tr>
     
     <tr>
       <td>所属: <%= @user.department.present? ? @user.department : "未設定" %></td> <!-- departmentの値がnilなら未設定を表示 -->
       <td>氏名: <%= @user.name %></td>
-      <td>出勤日数</td>
-      <td>月の末日</td>
+      <td>出勤日数: <%= @worked_sum %>日</td>
+      <td>締日 <%= @last_day.to_s(:date) %></td>
     </tr>
   </table>
   
+  <table class = "table-bordered table-striped table-condensed">
+    <thead>
+      <tr> <!--rowspan:縦結合、colspan：横結合-->
+        <th rowspan = "2">日付</th>
+        <th rowspan = "2">曜日</th>
+        <th colspan = "3">出社</th>
+        <th colspan = "3">退社</th>
+        <th rowspan = "2">在社時間</th>
+        <th rowspan = "2">備考</th>
+      </tr>
+      <tr>
+        <th>時</th>
+        <th>分</th>
+        <th></th>
+        <th>時</th>
+        <th>分</th>
+        <th></th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @dates.each do |day| %> <!-- 初月から月末までの日付を繰り返し処理 -->
+        <tr>
+          <!-- 日付 -->
+          <td><%= day.worked_on.to_s(:date) %></td> <!-- 日付をフォーマットで○/○と表示 -->
+          <!-- 曜日 -->
+          <td><%= @week[day.worked_on.wday] %></td> <!-- 日付からwdayメソッドで曜日を取得 -->
+          <!-- 出社時間　時 -->
+          <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td>
+          <!-- 出社時間　分 -->
+          <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
+          <!-- 出社ボタン -->
+          <td>
+            <% if day.worked_on == Date.today && day.started_at.nil? %> <!-- 当日に該当する日付の行、なおかつstarted_atがnilの場合のみ -->
+              <%= button_to "出社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %> <!-- button_toではデフォルトのHTTPメソッドが:postになる -->
+            <% end %>
+          </td>
+          <!-- 退社時間　時 -->
+          <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
+          <!-- 退社時間　分 -->
+          <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
+          <!-- 退社ボタン -->
+          <td>
+            <% if day.worked_on == Date.today && day.started_at.present? && day.finished_at.nil? %> <!-- 当月に該当する日付の行、なおかつstarted_atが存在し、finished_atがnilの場合のみ -->
+              <%= button_to "退社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
+            <% end %>
+          </td>
+          <!-- 在社時間 -->
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= working_time(day.started_at, day.finished_at) %>
+              <!-- 在社時間の合計を計算するための伏線 -->
+              <!-- 退勤時間から出勤時間を引いた結果を返す(秒数として返ってくる) -->
+              <% seconds = (day.finished_at - day.started_at).to_i %>
+              <!-- 1日ごとに計算された在社時間の秒数を足し続けている。正常に計算できるようにto_iメソッドを使っている -->
+              <% @total_working_time = @total_working_time.to_i + seconds %>
+            <% end %>
+          </td>
+          <!-- 備考 -->
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
+    
+    <tfoot>
+      <tr>
+        <!--「 総合勤務時間 = 基本時間 * 出勤日数」 又、to_fメソッドは、文字列を浮動小数点数の表現とみなしてFloatオブジェクトに変換する-->
+        <!-- to_fメソッドを使用する理由は、format_basic_timeメソッドで返って来る値がStringクラスのため -->
+        <td colspan="2">総合勤務時間: <%= format_basic_time(@user.basic_time).to_f * @worked_sum %></td>
+        <td colspan="6"></td>
+        <!-- 「在社時間合計 = 在社時間の合計秒数を割ってフォーマットで表示させる」attendanceヘルパーメソッド使用-->
+        <td>在社時間合計: <%= working_time_sum(@total_working_time) unless @total_working_time.nil? %></td> <!-- unless文でまだ存在しない場合にエラーが発生しないように予防 -->
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>

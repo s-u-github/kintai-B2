@@ -145,3 +145,16 @@ input, textarea, select, .uneditable-input {
     border-bottom: 1px solid $gray-lighter;
     }
 }
+
+
+/* btn */
+
+.btn-attendances-update {
+  width: 30%;
+  margin: auto;
+  padding-top: 30px;
+  display: flex;
+  .btn-primary{
+    margin-right: 10px;
+  }
+}

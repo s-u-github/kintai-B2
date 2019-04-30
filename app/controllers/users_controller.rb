@@ -16,12 +16,8 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     # debugger  # インスタンス変数を定義した直後にこのメソッドが実行される
-    # @first_day = Date.today.beginning_of_month # 当月の日付を使って初月をインスタンス変数に代入
-    if params[:first_day].nil? # 時間管理表のlink_toでパラメータを受け取っているかどうか
-      @first_day = Date.today.beginning_of_month
-    else
-      @first_day = Date.parse(params[:first_day]) # params[:first_day]で受け取った値は文字列なので、parseメソッドでDateクラスオブジェクトに変えている
-    end
+    # attendanceヘルパーメソッド使用
+    @first_day = first_day(params[:first_day])
     @last_day = @first_day.end_of_month # 初月の日付を使って月末をインスタンス変数に代入
     @week = %w{日 月 火 水 木 金 土} # 曜日を配列に代入
     (@first_day..@last_day).each do |day|
@@ -33,7 +29,7 @@ class UsersController < ApplicationController
     end
   end
   # orderメソッドは取得した値を特定のキーで並び替える。並び替えはデフォルトで昇順(ASC)
-  @dates = @user.attendances.where('worked_on >= ? and worked_on <= ?', @first_day, @last_day).order('worked_on')
+  @dates = user_attendances_month_date
   # 出勤日数の合計
   @worked_sum = @dates.where.not(started_at: nil).count
   end

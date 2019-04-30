@@ -43,6 +43,9 @@
       </tr>
     </thead>
     
+    <!-- 勤怠編集画面へ遷移 -->
+    <%= link_to "勤怠を編集", edit_attendances_path(@user, @first_day), class: "btn btn-primary" %> <!-- :idと:dateにはパスの引数に指定している -->
+    
     <tbody>
       <% @dates.each do |day| %> <!-- 初月から月末までの日付を繰り返し処理 -->
         <tr>
@@ -82,7 +85,7 @@
             <% end %>
           </td>
           <!-- 備考 -->
-          <td></td>
+          <td><%= day.note %></td>
         </tr>
       <% end %>
     </tbody>

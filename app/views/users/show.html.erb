@@ -52,7 +52,15 @@
           <!-- 日付 -->
           <td><%= day.worked_on.to_s(:date) %></td> <!-- 日付をフォーマットで○/○と表示 -->
           <!-- 曜日 -->
-          <td><%= @week[day.worked_on.wday] %></td> <!-- 日付からwdayメソッドで曜日を取得 -->
+          <td>
+            <% if @week[day.worked_on.wday] == "土" %>
+              <div class="font-bule"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを青 -->
+            <% elsif @week[day.worked_on.wday] == "日" %>
+              <div class="font-red"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを赤 -->
+            <% else %>
+              <%= @week[day.worked_on.wday] %>
+            <% end %>
+          </td> <!-- 日付からwdayメソッドで曜日を取得 -->
           <!-- 出社時間　時 -->
           <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td>
           <!-- 出社時間　分 -->

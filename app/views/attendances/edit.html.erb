@@ -22,7 +22,15 @@
               <!-- 日付 -->
               <td><%= day.worked_on.to_s(:date) %></td>
               <!-- 曜日 -->
-              <td><%= @week[day.worked_on.wday] %></td>
+              <td>
+                <% if @week[day.worked_on.wday] == "土" %>
+                  <div class="font-bule"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを青 -->
+                <% elsif @week[day.worked_on.wday] == "日" %>
+                  <div class="font-red"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを赤 -->
+                <% else %>
+                  <%= @week[day.worked_on.wday] %>
+                <% end %>
+              </td>
               <!-- 出社時間 -->
               <td><%= af.time_field :started_at, class: "form-control" %></td>
               <!-- 退社時間 -->

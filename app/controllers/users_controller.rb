@@ -8,8 +8,19 @@ class UsersController < ApplicationController
   
   # ユーザー一覧ページ
   def index
-    @users = User.paginate(page: params[:page]) # paginateメソッドの働きで、ユーザーのページネーションが行えるようになる。paramsの:pageはビューに記述したwill_paginateで自動生成される
-
+    # @users = User.paginate(page: params[:page]) # paginateメソッドの働きで、ユーザーのページネーションが行えるようになる。paramsの:pageはビューに記述したwill_paginateで自動生成される
+    @users = User.all
+  end
+  
+  # ユーザ一覧　編集して更新(管理者のみ)
+  def update_index
+    @user = User.find(params[:id])
+    if @user.update_attributes(users_params)
+      flash[:success] = "ユーザー情報を更新しました。"
+      redirect_to users_url
+    else
+      render 'edit'
+    end
   end
   
   # ユーザー勤怠画面
@@ -41,13 +52,31 @@ class UsersController < ApplicationController
   
   # 新規登録作成
   def create
-    @user = User.new(user_params) # Strong Parametersを用いる
-    if @user.save
-      log_in @user # 登録成功時にログインする
-      flash[:success] = "ユーザーの新規作成に成功しました。"
-      redirect_to @user # redirect_to user_url(@user)と同じ内容
+    # admin　ユーザー一覧からのCSVインポート
+    if params[:commit] == "CSVをインポート"
+      
+      if params[:users_file].content_type == "text/csv" # file_field_tagで選択したファイルがCSVファイルかどうか
+          registered_count = import_users # import_usersは下の方にメソッドあり CSVのインポート処理関連
+          unless @errors.count == 0
+            flash[:danger] = "#{@errors.count}件登録に失敗しました"
+          end
+          unless registered_count == 0
+            flash[:success] = "#{registered_count}件登録しました"
+          end
+          redirect_to users_url(error_users: @errors)
+      else
+        flash[:danger] = "CSVファイルのみ有効です"
+        redirect_to users_url
+      end
     else
-      render 'new'
+      @user = User.new(users_params) # Strong Parametersを用いる
+      if @user.save
+        log_in @user # 登録成功時にログインする
+        flash[:success] = "ユーザーの新規作成に成功しました。"
+        redirect_to @user # redirect_to user_url(@user)と同じ内容
+      else
+        render 'new'
+      end
     end
   end
   
@@ -96,12 +125,19 @@ class UsersController < ApplicationController
   private
   
     # Strong Parameters 必須となるパラメータと許可されたパラメータを指定することができる。
+    # ユーザー設定で使用
     def user_params
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
     end
     
+    # 基本情報の更新で使用
     def basic_info_params
       params.require(:user).permit(:basic_time, :work_time)
+    end
+  
+    # ユーザ一覧の更新で使用
+    def users_params
+      params.require(:user).permit(:name, :email, :department, :password, :code, :card_id, :surperior, :basic_time, :work_time, :work_time_finish)
     end
   
     # beforeアクション
@@ -115,7 +151,7 @@ class UsersController < ApplicationController
         redirect_to login_url
       end
     end
-    
+
     # 正しいユーザーかどうか確認
     def correct_user
       @user = User.find(params[:id])
@@ -126,5 +162,30 @@ class UsersController < ApplicationController
     # 管理者かどうか確認
     def admin_user
       redirect_to(root_url) unless current_user.admin?
+    end
+    
+    # CSVインポート
+    def import_users
+      # 登録処理前のレコード数
+      current_user_count = ::User.count
+      users = []
+      @errors = []
+      # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
+      # headersオプションを使うと、CSVの初めの1行はheaderとして出力の際に無視される (nameなどの属性名部分)
+      CSV.foreach(params[:users_file].path, headers: true) do |row| # CSV.foreach # ファイルから一行ずつ読み込み 又、application.rbでrequire 'csv'も必要
+        user = User.new({ name: row["name"], email: row["email"], department: row["department"], code: row["code"], card_id: row["card_id"], basic_time: row["basic_time"], 
+                              work_time: row["work_time"], work_time_finish: row["work_time_finish"], superior: row["superior"], admin: row["admin"], password: row["password"]})
+        if user.valid?
+            users << ::User.new({ name: row["name"], email: row["email"], department: row["department"], code: row["code"], card_id: row["card_id"], basic_time: row["basic_time"], 
+                              work_time: row["work_time"], work_time_finish: row["work_time_finish"], superior: row["superior"], admin: row["admin"], password: row["password"]})
+        else
+          @errors << user.errors.inspect # inspectメソッドとは、オブジェクトや配列などをわかりやすく文字列で返してくれるメソッド
+          Rails.logger.warn(user.errors.inspect)
+        end
+      end
+      # importメソッドでバルクインサートできる(gem 'activerecord-import'が必要)
+      ::User.import(users)
+      # 何レコード登録できたかを返す
+      ::User.count - current_user_count
     end
 end

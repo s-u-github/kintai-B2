@@ -14,5 +14,5 @@ class User < ApplicationRecord
 # パスワードの存在性と最小文字数の検証、allow_nilでパスワードを入力していない場合は検証をスルーして更新
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 # departmentカラムの文字数検証は範囲を指定するオプションinを使用、空でも通るようにallow_nil
-  validates :department, length: {in: 3..50}, allow_nil: true
+  validates :department, length: {in: 3..50}, allow_blank: true
 end

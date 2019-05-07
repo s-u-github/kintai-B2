@@ -1,8 +1,23 @@
 <% provide(:title, '一覧') %>
 <h1>ユーザ一覧</h1>
 
+<%= form_tag users_path, method: :post, multipart: true do %> <!-- ファイル読み込みの際はmultipart:trueが必要 -->
+  <div class="input-group" style="width: 300px;">
+    <span class="input-group-btn">
+      <!-- onclickはトリガー。この要素をクリックした時に、非表示にしているfile_field_tag(idから)に対してclickイベントを発生させている。
+      つまり、ここをクリックすればfile_field_tagのボタンもクリックしたことになり、ファイル選択のダイアログが表示されるようになる。 -->
+      <%= button_tag 'ファイル選択', class: "btn btn-default csv_input_btn", type: 'button', onclick: "$('#file_input').click();" %>
+    </span>
+    <!-- display: noneは非表示になっているだけで機能を無効化してるわけではない。又、required属性で入力を必須にしてエラーが出ないようにしている -->
+    <%= file_field_tag 'users_file', id: "file_input", style: "display: none;", onchange: "file_selected($(this));" , required: "required" %>
+    <%= text_field_tag 'filename',"", id: "filename", disabled: true, class:"form-control" %>
+  </div>
+  <br>
+  <%= submit_tag 'CSVをインポート', style: "width: 300px", class: "btn btn-primary csv_submit" %>
+<% end %>
+
 <!-- ページネーションを動作させる -->
-<%= will_paginate %>
+<!--<= will_paginate %>-->
 
 <ul class="users">
   <!-- @users.each do |user| -->
@@ -16,4 +31,12 @@
 </ul>
 
 <!-- ページネーションを動作させる -->
-<%= will_paginate %>
+<!--<= will_paginate %>-->
+
+<!-- text_field_tagに選択したファイル名を表示させる -->
+<script type="text/javascript">
+  function file_selected(file_field){
+    var filename = $(file_field)[0].files[0].name;
+    $("#filename").val(filename);
+  }
+</script>

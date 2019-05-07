@@ -28,6 +28,11 @@ Rails.application.routes.draw do
   
 # usersリソース
   resources :users do
+    
+    member do
+      patch  'update_index', as: :update_index # ユーザ一覧の更新
+    end
+    
     # 勤怠情報を保存する
     resources :attendances, only: :create #リソースをネストしていることで/users/:user_id/attendanceというURLになる。
   end

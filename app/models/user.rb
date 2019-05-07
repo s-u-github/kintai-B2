@@ -15,4 +15,15 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 # departmentカラムの文字数検証は範囲を指定するオプションinを使用、空でも通るようにallow_nil
   validates :department, length: {in: 3..50}, allow_blank: true
+  
+  
+# 上長一覧(自分が上長の場合、自分を除く)
+  def User.superior_user_list_non_self(session)
+    if User.find(session[:user_id]).superior == true
+      where(superior: true).where.not(id: session[:user_id])
+    else
+      where(superior: true)
+    end
+  end
+
 end

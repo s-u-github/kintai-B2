@@ -45,6 +45,6 @@ class AttendancesController < ApplicationController
     
     # 勤怠編集の更新で使用
     def attendances_params
-      params.permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_order_id])[:attendances]
     end
 end

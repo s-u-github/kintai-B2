@@ -144,7 +144,7 @@
           <!-- 時間外時間 -->
           <td><%= off_hours_time(@user.id, day) if day.endplans_time.present? %></td>
           <!-- 業務内容 -->
-          <td><%= day.business_contents %></td>
+          <td><%= day.business_contents if day.business_contents.present? %></td>
           <!-- 指示者確認㊞ -->
           <td><%= overtime_and_attendance_display(day) %></td>
 
@@ -154,12 +154,14 @@
     
     <tfoot>
       <tr>
+        <td></td>
         <!--「 総合勤務時間 = 基本時間 * 出勤日数」 又、to_fメソッドは、文字列を浮動小数点数の表現とみなしてFloatオブジェクトに変換する-->
         <!-- to_fメソッドを使用する理由は、format_basic_timeメソッドで返って来る値がStringクラスのため -->
         <td colspan="2">総合勤務時間: <%= format_basic_time(@user.basic_time).to_f * @worked_sum %></td>
         <td colspan="6"></td>
         <!-- 「在社時間合計 = 在社時間の合計秒数を割ってフォーマットで表示させる」attendanceヘルパーメソッド使用-->
         <td>在社時間合計: <%= working_time_sum(@total_working_time) unless @total_working_time.nil? %></td> <!-- unless文でまだ存在しない場合にエラーが発生しないように予防 -->
+        <td colspan="5">
         <td></td>
       </tr>
     </tfoot>

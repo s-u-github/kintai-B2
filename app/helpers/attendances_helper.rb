@@ -21,6 +21,32 @@ module AttendancesHelper
     format("%.2f", seconds / 60 / 60.0)
   end
   
+  # 時間外時間
+  def off_hours_time(id, overtime)
+    end_time = overtime.endplans_time # endplans_timeを取得
+    work_time = User.find(id).work_time_finish # usersテーブルのwork_time_finishを取得
+    end_adjust = Time.new(end_time.year, end_time.month, end_time.day, end_time.hour, end_time.min, 0) # end_plans_timeを新しく作り調整
+    work_adjust = Time.new(end_time.year, end_time.month, end_time.day, work_time.hour, work_time.min, 0) # work_time_finishを新しく作り調整(年月)
+    format("%.2f", ((end_adjust - work_adjust) / 60) / 60)
+  end
+
+  # 残業承認・勤怠変更承認の表示
+  def overtime_and_attendance_display(date)
+    if date.over_order_id == "承認"
+      "残業承認済"
+    elsif date.over_order_id == "否認"
+      "残業否認"
+    end
+    
+    if date.attendance_order_id == "承認"
+      "勤怠編集承認済"
+    elsif date.attendance_order_id == "否認"
+      "勤怠編集否認"
+    end
+  end
+
+  
+  
   # @first_dayの定義のリファクタリング (params[:first_day])
   def first_day(date)
     !date.nil? ? Date.parse(date) : Date.current.beginning_of_month

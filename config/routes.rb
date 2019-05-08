@@ -35,5 +35,9 @@ Rails.application.routes.draw do
     
     # 勤怠情報を保存する
     resources :attendances, only: :create #リソースをネストしていることで/users/:user_id/attendanceというURLになる。
+      member do
+        patch 'update_attendance_info', as: :update_attendance_info
+      end
+     
   end
 end

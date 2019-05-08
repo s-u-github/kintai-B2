@@ -1,0 +1,90 @@
+<!-- モーダル・ダイアログ -->
+<div class="modal fade" id="attendance-info-modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+			</div>
+			
+      <div class="modal-body">
+        <%= form_for @user, url: update_attendance_info_user_path, method: :patch do |f| %>
+        <% @title_name = Attendance.where(attendance_order_id: current_user.name).group_by(&:user_id) %>
+          <% @title_name.each do |keys, values| %>
+           <h4 class="modal-title" id="myModalLabel" style="text-align:center"><%= "【#{User.find(keys).name}からの勤怠変更申請】" %></h4>
+            
+              <table class= "table table-bordered table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th rowspan="3" valign="bottom">日付</th>
+                    <th rowspan="3" valign="bottom">曜日</th>
+                    <th colspan="4">変更前</th>
+                    <th colspan="4">変更後</th>
+                    <th rowspan="3" valign="bottom">備考</th>
+                    <th rowspan="3" valign="bottom">指示者確認㊞</th>
+                    <th rowspan="3" valign="bottom">変更</th>
+                    <th rowspan="3" valign="bottom">勤怠を確認する</th>
+                  </tr>
+                  
+                  <tr>
+                  	<th colspan="2">出社</th>
+                  	<th colspan="2">退社</th>
+                  	<th colspan="2">出社</th>
+                  	<th colspan="2">退社</th>
+                  </tr>
+                  
+                  <tr>
+                  	<th>時</th>
+                  	<th>分</th>
+        						<th>時</th>
+                  	<th>分</th>
+                  	<th>時</th>
+                  	<th>分</th>
+                  	<th>時</th>
+                  	<th>分</th>
+                  </tr>
+                </thead>
+                
+                <tbody>
+                  <% values.each do |value| %>
+                    <%= fields_for "attendances[]", value do |af| %>
+                      <tr>
+                        <!-- 日付 -->
+                        <td><%= value.worked_on.to_s(:date) %></td>
+                        <!-- 曜日 -->
+                        <td><%= @week[value.worked_on.wday] %></td>
+                        <!-- 変更前出社時間　時 -->
+                        <td><%= value.started_at.to_s(:hour) %></td>
+                        <!-- 変更前出社時間　分 -->
+                        <td><%= value.started_at.to_s(:min) %></td>
+                        <!-- 変更前退社時間　時 -->
+                        <td><%= value.finished_at.to_s(:hour) %></td>
+                        <!-- 変更前退社時間　分 -->
+                        <td><%= value.finished_at.to_s(:min) %></td>
+                        <!-- 変更後出社時間　時 -->
+                        <td><%= value.started_at.to_s(:hour) %></td>
+                        <!-- 変更後出社時間　分 -->
+                        <td><%= value.started_at.to_s(:min) %></td>
+                        <!-- 変更後退社時間　時 -->
+                        <td><%= value.finished_at.to_s(:hour) %></td>
+                        <!-- 変更後退社時間　分 -->
+                        <td><%= value.finished_at.to_s(:min) %></td>
+                        <!-- 備考 -->
+                        <td><%= value.note %></td>
+                        <!-- 指示者確認㊞ -->
+                        <td><%= af.select :attendance_order_id, [["なし", "なし"],["申請中", "#{current_user.name}"],["承認", "承認"],["否認", "否認"]], :include_blank => true %></td>
+                        <!-- 変更 -->
+                        <td><%= af.check_box :agreement, {}, "true", "false" %></td>
+                        <!-- 勤怠を確認する-->
+                        <td><%= link_to "確認", user_path(id: keys, first_day: value.worked_on.beginning_of_month), class: "btn btn-primary" %></td>
+                      </tr>
+                    <% end %> <!-- fields_for -->
+                  <% end %> <!-- values.each -->
+                </tbody>
+              </table>
+          <% end %>  <!-- each keys,values -->
+             <%= f.submit "変更を送信する", class: "btn btn-sm btn-primary" %>
+        <% end %> <!-- form_for --> 
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->

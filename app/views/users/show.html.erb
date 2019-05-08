@@ -22,6 +22,21 @@
       <td>締日 <%= @last_day.to_s(:date) %></td>
     </tr>
   </table>
+    
+    <!-- 現在のユーザーかどうか -->
+    <% if current_user?(@user) %>
+      <% if current_user.superior? %> <!-- 上長かどうか -->
+        <%= render 'attendances/info_modal' %>
+      <% end %>  <!-- current_user.superior -->
+    
+      <!-- 勤怠編集画面へ遷移 -->
+      <%= link_to "勤怠を編集", edit_attendances_path(@user, @first_day), class: "btn btn-primary" %> <!-- :idと:dateにはパスの引数に指定している -->
+      <!-- CSV出力　-->
+      <%= link_to "CSV出力", '#', class: "btn btn-primary" %><br>
+      <!-- 勤怠修正ログへ -->
+      <%= link_to "勤怠修正ログ(承認済み)", '#', class: "btn btn-primary" %>
+    <% end %>  <!-- if current_user? その１ -->
+  
   
   <table class = "table-bordered table-striped table-condensed">
     <thead>
@@ -42,10 +57,7 @@
         <th></th>
       </tr>
     </thead>
-    
-    <!-- 勤怠編集画面へ遷移 -->
-    <%= link_to "勤怠を編集", edit_attendances_path(@user, @first_day), class: "btn btn-primary" %> <!-- :idと:dateにはパスの引数に指定している -->
-    
+  
     <tbody>
       <% @dates.each do |day| %> <!-- 初月から月末までの日付を繰り返し処理 -->
         <tr>

@@ -9,8 +9,10 @@
         &emsp; <%= @first_day.to_s(:year_month) %> 時間管理表&emsp;
         <!-- 次月の情報をパラメータとして送信している -->
         <%= link_to '→', user_path(params: {id: @user.id, first_day: @first_day.next_month}), class: "btn btn-xs btn-primary" %>
+      </td> <!-- usersヘルパーメソッド使用 -->
+      <td>指定勤務時間 <%= format_basic_time(@user.work_time) %><br>
+          指定勤務終了時間 <%= format_basic_time(@user.work_time_finish) %>
       </td>
-      <td>指定勤務時間 <%= format_basic_time(@user.work_time) %></td> <!-- usersヘルパーメソッド使用 -->
       <td>基本時間 <%= format_basic_time(@user.basic_time) %></td>
       <td>初日 <%= @first_day.to_s(:date) %></td>
     </tr>
@@ -35,19 +37,30 @@
       <%= link_to "CSV出力", '#', class: "btn btn-primary" %><br>
       <!-- 勤怠修正ログへ -->
       <%= link_to "勤怠修正ログ(承認済み)", '#', class: "btn btn-primary" %>
-    <% end %>  <!-- if current_user? その１ -->
+    <% end %>  <!-- if current_user? その1 -->
   
   
   <table class = "table-bordered table-striped table-condensed">
     <thead>
       <tr> <!--rowspan:縦結合、colspan：横結合-->
-        <th rowspan = "2">日付</th>
-        <th rowspan = "2">曜日</th>
-        <th colspan = "3">出社</th>
-        <th colspan = "3">退社</th>
-        <th rowspan = "2">在社時間</th>
-        <th rowspan = "2">備考</th>
+        <th rowspan="3" valign="bottom">残業申請</th>
+        <th rowspan="3" valign="bottom">日付</th>
+        <th rowspan="3" valign="bottom">曜日</th>
+        <th colspan="8">【実績】</th>
+        <th colspan="5">【所定外勤務】</th>
       </tr>
+      
+      <tr>
+        <th colspan="3">出社</th>
+        <th colspan="3">退社</th>
+        <th rowspan="2" valign="bottom">在社時間</th>
+        <th rowspan="2" valign="bottom">備考</th>
+        <th colspan="2">終了予定時間</th>
+        <th rowspan="2" valign="bottom">時間外時間</th>
+        <th rowspan="2" valign="bottom">業務処理内容</th>
+        <th rowspan="2" valign="bottom">指示者確認㊞</th>
+      </tr>
+    
       <tr>
         <th>時</th>
         <th>分</th>
@@ -55,12 +68,24 @@
         <th>時</th>
         <th>分</th>
         <th></th>
+        <th>時</th>
+        <th>分</th>
       </tr>
-    </thead>
+
+
   
     <tbody>
       <% @dates.each do |day| %> <!-- 初月から月末までの日付を繰り返し処理 -->
+      
         <tr>
+          <td>
+            <% if current_user?(@user) %>
+                <!-- モーダルウィンドウ残業申請 -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#over-modal"><%= "残業申請" %></button>
+                <!-- モーダル内容 -->
+                
+            <% end %>  <!-- if current_user? その4 -->
+          </td>
           <!-- 日付 -->
           <td><%= day.worked_on.to_s(:date) %></td> <!-- 日付をフォーマットで○/○と表示 -->
           <!-- 曜日 -->
@@ -79,9 +104,12 @@
           <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
           <!-- 出社ボタン -->
           <td>
-            <% if day.worked_on == Date.today && day.started_at.nil? %> <!-- 当日に該当する日付の行、なおかつstarted_atがnilの場合のみ -->
-              <%= button_to "出社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %> <!-- button_toではデフォルトのHTTPメソッドが:postになる -->
-            <% end %>
+            <!-- 現在のユーザーかどうか -->
+            <% if current_user?(@user) %>
+              <% if day.worked_on == Date.today && day.started_at.nil? %> <!-- 当日に該当する日付の行、なおかつstarted_atがnilの場合のみ -->
+                <%= button_to "出社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %> <!-- button_toではデフォルトのHTTPメソッドが:postになる -->
+              <% end %>
+            <% end %> <!-- if current_user? その2 -->
           </td>
           <!-- 退社時間　時 -->
           <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
@@ -89,9 +117,12 @@
           <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
           <!-- 退社ボタン -->
           <td>
-            <% if day.worked_on == Date.today && day.started_at.present? && day.finished_at.nil? %> <!-- 当月に該当する日付の行、なおかつstarted_atが存在し、finished_atがnilの場合のみ -->
-              <%= button_to "退社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
-            <% end %>
+            <!-- 現在のユーザーかどうか -->
+            <% if current_user?(@user) %>
+              <% if day.worked_on == Date.today && day.started_at.present? && day.finished_at.nil? %> <!-- 当月に該当する日付の行、なおかつstarted_atが存在し、finished_atがnilの場合のみ -->
+                <%= button_to "退社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
+              <% end %>
+            <% end %> <!-- if current_user? その3 -->
           </td>
           <!-- 在社時間 -->
           <td>
@@ -105,7 +136,18 @@
             <% end %>
           </td>
           <!-- 備考 -->
-          <td><%= day.note %></td>
+          <td><%= day.note if day.note.present? %></td>
+          <!-- 終了予定時間(時) -->
+          <td><%= day.endplans_time.to_s(:hour) if day.endplans_time.present? %></td>
+          <!-- 終了予定時間(分) -->
+          <td><%= day.endplans_time.to_s(:min) if day.endplans_time.present? %></td>
+          <!-- 時間外時間 -->
+          <td><%= off_hours_time(@user.id, day) if day.endplans_time.present? %></td>
+          <!-- 業務内容 -->
+          <td><%= day.business_contents %></td>
+          <!-- 指示者確認㊞ -->
+          <td><%= overtime_and_attendance_display(day) %></td>
+
         </tr>
       <% end %>
     </tbody>

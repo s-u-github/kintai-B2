@@ -7,9 +7,11 @@
   <!--<div id="monthly_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" ></div>-->
 
 <% if Attendance.find_by(attendance_order_id: current_user.name) %>
-  <a id="attendance-info" data-toggle="modal", data-target="#attendance-info-modal", class="font-red">
+  <!-- data-toggle="modal", data-target="#attendance-info-modal"はモーダルのトリガー -->
+  <a data-toggle="modal", data-target="#attendance-info-modal", class="font-red">
     <%= "【勤怠変更申請のお知らせ】#{@attendance_application_count}件の通知があります。" %>
   </a><br>
+  <!-- モーダル内容 -->
   <%= render 'attendances/attendance_info_modal' %>
 <% else %>
   <div>【勤怠変更申請のお知らせ】<br></div>

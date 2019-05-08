@@ -41,10 +41,32 @@ class AttendancesController < ApplicationController
     end
   end
   
+  # 勤怠変更お知らせの更新
+  def update_attendance_info
+    @user = User.find(params[:id])
+    update_count = 0
+    update_attendance_info_params.each do |id, item|
+      if item[:agreement] == "true"
+        attendance = Attendance.find(id)
+        attendance.update_attributes(attendance_order_id: item[:attendance_order_id])
+        update_count += 1
+      end
+    end
+    flash[:success] = "#{update_attendance_info_params.keys.count}件中#{update_count}件の申請を更新しました。"
+    redirect_to user_path(@user)
+  end
+  
+  
+  
   private
     
     # 勤怠編集の更新で使用
     def attendances_params
       params.permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_order_id])[:attendances]
+    end
+    
+    # 勤怠変更お知らせの更新で使用
+    def update_attendance_info_params
+      params.permit(attendances: [:attendance_order_id, :agreement])[:attendances]
     end
 end

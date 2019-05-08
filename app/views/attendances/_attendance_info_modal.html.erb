@@ -7,7 +7,7 @@
 			</div>
 			
       <div class="modal-body">
-        <%= form_for @user, url: update_attendance_info_user_path, method: :patch do |f| %>
+        <%= form_for @user, url: update_attendance_info_attendance_path, method: :patch do |f| %>
         <% @title_name = Attendance.where(attendance_order_id: current_user.name).group_by(&:user_id) %>
           <% @title_name.each do |keys, values| %>
            <h4 class="modal-title" id="myModalLabel" style="text-align:center"><%= "【#{User.find(keys).name}からの勤怠変更申請】" %></h4>

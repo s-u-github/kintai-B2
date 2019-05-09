@@ -47,6 +47,8 @@ class UsersController < ApplicationController
   @attendance = @user.attendances.new
   # 勤怠変更申請のカウント
   @attendance_application_count = Attendance.where(attendance_order_id: current_user.name).count
+  # 残業申請のカウント
+  @overtime_application_count = Attendance.where(over_order_id: current_user.name).count
   end
   
   # 新規登録ページ

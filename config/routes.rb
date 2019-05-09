@@ -42,7 +42,7 @@ Rails.application.routes.draw do
     member do
       patch 'update_attendance_info', as: :update_attendance_info # 勤怠変更お知らせの更新
       patch 'update_overtime', as: :update_overtime # 残業申請
+      patch 'update_overtime_info', as: :update_overtime_info # 残業申請お知らせの更新
     end
-     
   end
 end

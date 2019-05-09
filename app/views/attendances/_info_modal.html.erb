@@ -6,6 +6,7 @@
   <!-- １ヶ月勤怠申請のモーダル呼び出し -->
   <!--<div id="monthly_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" ></div>-->
 
+<!-- 勤怠変更のお知らせモーダル関連 -->
 <% if Attendance.find_by(attendance_order_id: current_user.name) %>
   <!-- data-toggle="modal", data-target="#attendance-info-modal"はモーダルのトリガー -->
   <a data-toggle="modal", data-target="#attendance-info-modal", class="font-red">
@@ -16,14 +17,16 @@
 <% else %>
   <div>【勤怠変更申請のお知らせ】<br></div>
 <% end %>
-  <!-- 勤怠変更申請のモーダル呼び出し -->
-  <!--<div id="attendance-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" ></div>-->
-  
-<!--< if @overtime_application_count > 0 %>-->
-<!--  <= link_to "【残業申請のお知らせ】#{@overtime_application_count}件の通知があります。", overtime_info_path(@user), remote: true, :style=>"color:red;" %><br>-->
-<!--< else %>-->
-<!--  <div>【残業申請のお知らせ】<br></div>-->
-<!--< end %>-->
-  <!-- 残業申請のモーダル呼び出し-->
-  <!--<div id="over-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" ></div>-->
+
+<!-- 残業申請のお知らせモーダル関連 -->
+<% if Attendance.find_by(over_order_id: current_user.name) %>
+  <!-- data-toggle="modal", data-target="#overtime-info-modal"はモーダルのトリガー -->
+  <a data-toggle="modal", data-target="#overtime-info-modal", class="font-red">
+    <%= "【残業申請のお知らせ】#{@overtime_application_count}件の通知があります。" %>
+  </a><br>
+  <!-- モーダル内容 -->
+  <%= render 'attendances/overtime_info_modal' %>
+<% else %>
+  <div>【残業申請のお知らせ】<br></div>
+<% end %>
   

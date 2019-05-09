@@ -151,7 +151,10 @@
           <!-- 業務内容 -->
           <td><%= day.business_contents if day.business_contents.present? %></td>
           <!-- 指示者確認㊞ -->
-          <td><%= overtime_and_attendance_display(day) %></td>
+          <td>
+            <%= overtime_display(day) %><br>
+          　<%= attendance_display(day) %>
+          </td>
         </tr>
         
       <% end %> <!-- dates.each -->
@@ -167,7 +170,17 @@
         <!-- 「在社時間合計 = 在社時間の合計秒数を割ってフォーマットで表示させる」attendanceヘルパーメソッド使用-->
         <td>在社時間合計: <%= working_time_sum(@total_working_time) unless @total_working_time.nil? %></td> <!-- unless文でまだ存在しない場合にエラーが発生しないように予防 -->
         <td colspan="5">
-        <td></td>
+        <!-- １ヶ月分の勤怠申請 -->
+        <td>
+          所属長承認&emsp;<%= current_month_status(@first_day) %><br>
+          <!-- 現在のユーザーかどうか -->
+          <% if current_user?(@user) %>
+            <%= form_for @attendance, url: update_month_attendance_path(first_day: @first_day), method: :patch do |f| %>
+              <%= f.collection_select :month_order_id, User.superior_user_list_non_self(session), :name, :name, :include_blank => true %>
+              <%= f.submit "申請", class: "btn btn-primary" %>
+            <% end %>
+          <% end %>　<!-- if current_user? その4 -->
+        </td>
       </tr>
     </tfoot>
   </table>

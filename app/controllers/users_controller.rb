@@ -32,23 +32,25 @@ class UsersController < ApplicationController
     @last_day = @first_day.end_of_month # 初月の日付を使って月末をインスタンス変数に代入
     @week = %w{日 月 火 水 木 金 土} # 曜日を配列に代入
     (@first_day..@last_day).each do |day|
-    # any?メソッドは、ブロック変数attendanceに要素を入れながらブロック（ここではattendance.worked_on == day）を実行し、
-    # ブロックが真（true）を返した時は、ブロック実行をその時点で中断しtrueを返します。ブロックの戻り値が全て偽（false）である時はfalseが返されます
-    unless @user.attendances.any? {|attendance| attendance.worked_on == day} # unless文なのでfalseの場合、下の処理をする。
-      record = @user.attendances.build(worked_on: day) # Railsの慣習に倣い、あるモデルに関連づいたモデルのデータを生成するのにbuildメソッドを使っている
-      record.save
+      # any?メソッドは、ブロック変数attendanceに要素を入れながらブロック（ここではattendance.worked_on == day）を実行し、
+      # ブロックが真（true）を返した時は、ブロック実行をその時点で中断しtrueを返します。ブロックの戻り値が全て偽（false）である時はfalseが返されます
+      unless @user.attendances.any? {|attendance| attendance.worked_on == day} # unless文なのでfalseの場合、下の処理をする。
+        record = @user.attendances.build(worked_on: day) # Railsの慣習に倣い、あるモデルに関連づいたモデルのデータを生成するのにbuildメソッドを使っている
+        record.save
+      end
     end
-  end
-  # orderメソッドは取得した値を特定のキーで並び替える。並び替えはデフォルトで昇順(ASC)
-  @dates = user_attendances_month_date
-  # 出勤日数の合計
-  @worked_sum = @dates.where.not(started_at: nil).count
-  # 残業モーダルのform用
-  @attendance = @user.attendances.new
-  # 勤怠変更申請のカウント
-  @attendance_application_count = Attendance.where(attendance_order_id: current_user.name).count
-  # 残業申請のカウント
-  @overtime_application_count = Attendance.where(over_order_id: current_user.name).count
+    # orderメソッドは取得した値を特定のキーで並び替える。並び替えはデフォルトで昇順(ASC)
+    @dates = user_attendances_month_date
+    # 出勤日数の合計
+    @worked_sum = @dates.where.not(started_at: nil).count
+    # 残業モーダルのform用
+    @attendance = @user.attendances.new
+    # 勤怠変更申請のカウント
+    @attendance_application_count = Attendance.where(attendance_order_id: current_user.name).count
+    # 残業申請のカウント
+    @overtime_application_count = Attendance.where(over_order_id: current_user.name).count
+    # １ヶ月の勤怠申請のカウント
+    @month_application_count = Attendance.where(month_order_id: current_user.name).count
   end
   
   # 新規登録ページ

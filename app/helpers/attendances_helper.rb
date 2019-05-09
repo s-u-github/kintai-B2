@@ -30,22 +30,40 @@ module AttendancesHelper
     format("%.2f", ((end_adjust - work_adjust) / 60) / 60)
   end
 
-  # 残業承認・勤怠変更承認の表示
-  def overtime_and_attendance_display(date)
-    if date.over_order_id == "承認"
+  # 残業承認の表示
+  def overtime_display(date)
+    if date.over_order_id == "上司A" || date.over_order_id == "上司B" || date.over_order_id == "上司C" || date.over_order_id == "上司D"
+      "残業申請中：#{date.over_order_id}"
+    elsif date.over_order_id == "承認"
       "残業承認済"
     elsif date.over_order_id == "否認"
       "残業否認"
     end
-    
-    if date.attendance_order_id == "承認"
+  end
+
+  # 勤怠変更承認の表示
+  def attendance_display(date)
+    if date.attendance_order_id == "上司A" || date.attendance_order_id == "上司B" || date.attendance_order_id == "上司C" || date.attendance_order_id == "上司D"
+      "勤怠編集申請中：#{date.attendance_order_id}"
+    elsif date.attendance_order_id == "承認"
       "勤怠編集承認済"
     elsif date.attendance_order_id == "否認"
-      "勤怠編集否認"
+      "残業編集否認"
     end
   end
 
-  
+  # 所属長承認のステータス
+  def current_month_status(day)
+    @user = User.find(params[:id])
+    @attendance = @user.attendances.find_by(worked_on: day)
+    if @attendance.month_order_id == "承認" &&  @attendance.order_status.present?
+      "#{@attendance.order_status}から承認済"
+    elsif @attendance.month_order_id == "否認" &&  @attendance.order_status.present?
+      "#{@attendance.order_status}から否認"
+    else
+      "未"
+    end
+  end
   
   # @first_dayの定義のリファクタリング (params[:first_day])
   def first_day(date)

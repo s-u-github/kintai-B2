@@ -73,15 +73,39 @@ class AttendancesController < ApplicationController
     update_overtime_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(over_order_id: item[:attendance_order_id])
+        attendance.update_attributes(over_order_id: item[:over_order_id])
         update_count += 1
       end
     end
     flash[:success] = "#{update_overtime_info_params.keys.count}件中#{update_count}件の申請を更新しました。"
-    redirect_to user_path(@user)
+    redirect_to @user
   end
   
+  # １ヶ月分の勤怠申請の申請
+  def update_month
+    @user = User.find(params[:id])
+    day = params[:first_day]
+    @attendance = @user.attendances.find_by(worked_on: day)
+    if @attendance.update_attributes(update_month_params)
+      flash[:success] = "１ヶ月の勤怠を申請をしました。"
+      redirect_to @user
+    end
+  end
   
+  # １ヶ月分の勤怠申請の更新
+  def update_month_info
+    @user = User.find(params[:id])
+    update_count = 0
+    update_month_info_params.each do |id, item|
+      if item[:agreement] == "true"
+        attendance = Attendance.find(id)
+        attendance.update_attributes(month_order_id: item[:month_order_id], order_status: current_user.name)
+        update_count += 1
+      end
+    end
+    flash[:success] = "#{update_month_info_params.keys.count}件中#{update_count}件の申請を更新しました。"
+    redirect_to @user
+  end
   
   private
     
@@ -103,5 +127,15 @@ class AttendancesController < ApplicationController
     # 残業申請お知らせの更新で使用
     def update_overtime_info_params
       params.permit(attendances: [:over_order_id, :agreement])[:attendances]
+    end
+    
+    # １ヶ月分の勤怠申請で使用
+    def update_month_params
+      params.require(:attendance).permit(:month_order_id)
+    end
+    
+    # １ヶ月分の勤怠申請お知らせの更新で使用
+    def update_month_info_params
+      params.permit(attendances: [:month_order_id, :agreement])[:attendances]
     end
 end

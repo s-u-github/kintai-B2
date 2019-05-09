@@ -1,0 +1,50 @@
+<!-- モーダル・ダイアログ -->
+<% provide :month_order_name, 'current_user.name' %>
+
+<div class="modal fade" id="month-info-modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+			</div>
+			
+      <div class="modal-body">
+        <%= form_for @user, url: update_month_info_attendance_path, method: :patch do |f| %>
+        <% @title_name = Attendance.where(month_order_id: current_user.name).group_by(&:user_id) %>
+          <% @title_name.each do |keys, values| %>
+           <h4 class="modal-title" id="myModalLabel" style="text-align:center"><%= "【#{User.find(keys).name}からの１ヶ月分勤怠申請】" %></h4>
+            
+              <table class= "table table-bordered table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th>月</th>
+                    <th>指示者確認㊞</th>
+                    <th>変更</th>
+                    <th>勤怠を確認する</th>
+                  </tr>
+                </thead>
+                  
+                <tbody>
+                  <% values.each do |value| %>
+                    <%= fields_for "attendances[]", value do |af| %>
+                      <tr>
+                        <!-- 月 -->
+                        <td><%= value.worked_on.month %>月</td>
+                        <!-- 指示者確認㊞ -->
+                        <td><%= af.select :month_order_id, [["なし", "なし"],["申請中", "#{current_user.name}"],["承認", "承認"],["否認", "否認"]], :include_blank => true %></td>
+                        <!-- 変更 -->
+                        <td><%= af.check_box :agreement, {}, "true", "false" %></td>
+                        <!-- 勤怠を確認する -->
+                        <td><%= link_to "確認", user_path(id: keys, first_day: value.worked_on.beginning_of_month), class: "btn btn-primary" %></td>
+                      </tr>
+                    <% end %> <!-- fields_for -->
+                  <% end %> <!-- each values -->
+                </tbody>
+              </table>
+          <% end %>  <!-- each keys,values -->
+             <%= f.submit "変更を送信する", class: "btn btn-sm btn-primary" %>
+        <% end %> <!-- form_for --> 
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->

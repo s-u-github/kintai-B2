@@ -1,0 +1,87 @@
+<!-- モーダル・ダイアログ -->
+<div class="modal fade" id="overtime-modal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+				<h4 class="modal-title">【残業申請】</h4>
+			</div>
+			
+      <div class="modal-body">
+        <%= form_for @attendance, url: update_overtime_attendance_path(id: @user.id, first_day: @first_day), method: :patch do |f| %>
+
+            <table class="txt1 table table-bordered table-striped table-condensed">
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>曜日</th>
+                  <th>終了予定時間</th>
+                  <th>翌日</th>
+                  <th>業務処理内容</th>
+                  <th>指示者確認㊞</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+
+                  <tr>
+                    <!-- 日付 -->
+                    <td id="modal-date"></td>
+                     
+                    <!-- data-hidden_dateで取得した値を、コントローラーに飛ばす -->
+                    <!--<= f.hidden_field :day, class: 'modal-hiddenDate' %>-->
+                    <%= f.hidden_field :day, :value => "", :id => 'modal-hiddenDate' %>
+                    
+                    <!-- 曜日 -->
+                    <td id="modal-youbi"></td>
+                     <!--終了予定時間 -->
+                    <td><%= f.time_field :endplans_time, class: 'form-control' %> </td>
+                     <!--翌日チェック -->
+                    <td><%= f.check_box :next_day, {}, "true", "false" %></td>
+                     <!--業務処理内容 -->
+                    <td><%= f.text_field :business_contents, class: 'form-controll' %></td>
+                     <!--指示者確認㊞ -->
+                    <td><%= f.collection_select :over_order_id, User.superior_user_list_non_self(session), :name, :name, :include_blank => true %></td>
+                  </tr>
+                  
+              </tbody>
+            </table>
+            <%= f.submit "残業を申請する", class: "btn btn-sm btn-primary" %>
+          <!-- if文 -->
+          <% end %><!-- form_for -->
+
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->
+
+
+<script>
+ $('#overtime-modal').on('show.bs.modal', function (event) { // ボタンがクリックされてモーダルが開いたらイベント発生
+ 　
+  // クリックされたbuttonを取得
+  var button = $(event.relatedTarget); 
+
+  // 上記の中の、data-dateの値を取得
+  var date = button.data('date'); 
+
+  // クリックされているovertime-modal要素を取得
+  var modal = $(this); 
+
+  // overtime-modalの中のmodal-dateという要素を取得し、そこにdata-dateの値を入れる。これでクリックした日付の日付がモーダル内に入る
+  modal.find('#modal-date').text(date); 
+  
+  // 上記同様にyoubiを取得
+  var button = $(event.relatedTarget);
+  var youbi = button.data('youbi');
+  var modal =$(this);
+  modal.find('#modal-youbi').text(youbi);
+
+  // 日付をhiddenで送信したかったので上記と同様に処理
+  var button = $(event.relatedTarget);
+  var hidden_date = button.data('hidden_date');
+  var modal =$(this);
+  modal.find('#modal-hiddenDate').val(hidden_date);
+
+ });
+</script>

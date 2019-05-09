@@ -81,9 +81,14 @@
           <td>
             <% if current_user?(@user) %>
                 <!-- モーダルウィンドウ残業申請 -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#over-modal"><%= "残業申請" %></button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#overtime-modal"
+                        data-date="<%= day.worked_on.to_s(:date) %>" 
+                        data-hidden_date="<%= day.worked_on %>"
+                        data-youbi="<%= @week[day.worked_on.wday] %>">
+                  残業申請
+                </button>
                 <!-- モーダル内容 -->
-                
+                <%= render 'attendances/overtime_modal' %>
             <% end %>  <!-- if current_user? その4 -->
           </td>
           <!-- 日付 -->
@@ -93,7 +98,7 @@
             <% if @week[day.worked_on.wday] == "土" %>
               <div class="font-bule"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを青 -->
             <% elsif @week[day.worked_on.wday] == "日" %>
-              <div class="font-red"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを赤 -->
+              <div class="font-red"><%= @week[day.worked_on.wday] %></div>  <!-- フォントカラーを赤 -->
             <% else %>
               <%= @week[day.worked_on.wday] %>
             <% end %>
@@ -147,9 +152,9 @@
           <td><%= day.business_contents if day.business_contents.present? %></td>
           <!-- 指示者確認㊞ -->
           <td><%= overtime_and_attendance_display(day) %></td>
-
         </tr>
-      <% end %>
+        
+      <% end %> <!-- dates.each -->
     </tbody>
     
     <tfoot>

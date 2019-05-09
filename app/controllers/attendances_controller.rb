@@ -56,6 +56,17 @@ class AttendancesController < ApplicationController
     redirect_to user_path(@user)
   end
   
+  # 残業申請の申請
+  def update_overtime
+    @user = User.find(params[:id])
+    @attendance = @user.attendances.find_by(worked_on: params[:attendance][:day])
+    if @attendance.update_attributes(update_overtime_params)
+      flash[:success] = "残業の申請をしました。"
+      redirect_to @user
+    end
+  end
+  
+  
   
   
   private
@@ -68,5 +79,10 @@ class AttendancesController < ApplicationController
     # 勤怠変更お知らせの更新で使用
     def update_attendance_info_params
       params.permit(attendances: [:attendance_order_id, :agreement])[:attendances]
+    end
+    
+    # 残業申請で使用
+    def update_overtime_params
+      params.require(:attendance).permit(:endplans_time, :next_day, :business_contents, :over_order_id)
     end
 end

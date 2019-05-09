@@ -10,7 +10,7 @@ module AttendancesHelper
         Time.now.min, 0
         )
   end
-  
+
   # 在社時間のフォーマット
   def working_time(started_at, finished_at)
     format("%.2f", (((finished_at - started_at) / 60) / 60.0)) #この計算結果は秒数で返ってくるため、秒数を2度60で割っている

@@ -1,6 +1,9 @@
-<% provide(:title, "ホーム") %>
+<% provide(:title, "トップ") %>
 
 <div class="center jumbotron">  <!-- jumbotronはBootStrapによって特別な意味を持つ -->
-   <h1>勤怠システムB<２回目></h1>
-   <%= link_to "アカウント作成", signup_path, class: "btn btn-lg btn-primary" %> <!-- ３つのクラスは上記同様にBootStrapによって特別な意味を持つ -->
+   <h1>勤怠システム</h1>
+   <% unless logged_in? %>
+     <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary" %><br>
+     <p class="p1">アカウント作成は<%= link_to "こちら", signup_path %>から</p> <!-- ３つのクラスは上記同様にBootStrapによって特別な意味を持つ -->
+   <% end %>
 </div>

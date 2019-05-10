@@ -36,7 +36,7 @@
       <!-- CSV出力　-->
       <%= link_to "CSV出力", '#', class: "btn btn-primary" %><br>
       <!-- 勤怠修正ログへ -->
-      <%= link_to "勤怠修正ログ(承認済み)", '#', class: "btn btn-primary" %>
+      <%= link_to "勤怠修正ログ(承認済み)", '#', class: "btn btn-primary btn-log" %>
     <% end %>  <!-- if current_user? その1 -->
   
   
@@ -96,9 +96,9 @@
           <!-- 曜日 -->
           <td>
             <% if @week[day.worked_on.wday] == "土" %>
-              <div class="font-bule"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを青 -->
+              <div style="color:blue;"><%= @week[day.worked_on.wday] %></div> <!-- フォントカラーを青 -->
             <% elsif @week[day.worked_on.wday] == "日" %>
-              <div class="font-red"><%= @week[day.worked_on.wday] %></div>  <!-- フォントカラーを赤 -->
+              <div style="color:red;"><%= @week[day.worked_on.wday] %></div>  <!-- フォントカラーを赤 -->
             <% else %>
               <%= @week[day.worked_on.wday] %>
             <% end %>
@@ -112,7 +112,7 @@
             <!-- 現在のユーザーかどうか -->
             <% if current_user?(@user) %>
               <% if day.worked_on == Date.today && day.started_at.nil? %> <!-- 当日に該当する日付の行、なおかつstarted_atがnilの場合のみ -->
-                <%= button_to "出社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %> <!-- button_toではデフォルトのHTTPメソッドが:postになる -->
+                <%= button_to "出社", user_attendances_path(@user), class: "btn btn-primary" %> <!-- button_toではデフォルトのHTTPメソッドが:postになる -->
               <% end %>
             <% end %> <!-- if current_user? その2 -->
           </td>
@@ -125,7 +125,7 @@
             <!-- 現在のユーザーかどうか -->
             <% if current_user?(@user) %>
               <% if day.worked_on == Date.today && day.started_at.present? && day.finished_at.nil? %> <!-- 当月に該当する日付の行、なおかつstarted_atが存在し、finished_atがnilの場合のみ -->
-                <%= button_to "退社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
+                <%= button_to "退社", user_attendances_path(@user), class: "btn btn-primary" %>
               <% end %>
             <% end %> <!-- if current_user? その3 -->
           </td>

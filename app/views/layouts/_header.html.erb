@@ -1,19 +1,43 @@
 <header class="navbar navbar-fixed-top navbar-inverse">  <!--headerタグ 3つのクラスはBootStrapによって意味が与えられる -->
   <div class="container">  <!-- divタグ これもBootStrapによって意味が与えられる -->
-    <%= link_to "勤怠システムB2", root_path, id: "logo" %>  <!-- classはページ内でなんども使えるが、idは一度しか使えない -->
-                                                      <!-- id:"logo"はオプションとなり、今回の場合はCSS idでlogoと指定している -->
+  
+    <% if !logged_in? %> <!-- 否定演算子なのでログインしていない場合true -->
+      <%= link_to "勤怠システム", root_path, id: "logo" %>  <!-- classはページ内でなんども使えるが、idは一度しか使えない -->
+    <% elsif current_user.admin? %>                                                  <!-- id:"logo"はオプションとなり、今回の場合はCSS idでlogoと指定している -->
+      <%= link_to "勤怠システム", root_path, id: "logo" %>
+      <div id="logo" style="color:red;">admin</div>
+    <% elsif current_user.superior? %>
+      <%= link_to "勤怠システム", current_user, id: "logo" %>
+      <div id="logo" style="color:blue;">superior</div>
+    <% else %>
+      <%= link_to "勤怠システム", current_user, id: "logo" %>
+      <div id="logo" style="color:green;">user</div>    
+    <% end %>
+    
     <nav>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "ホーム", root_path %></li>
+        <li>
+          <% if !logged_in? %>
+            <%= link_to "トップへ", root_path %>
+          <% elsif current_user.admin? %>
+            <%= link_to "トップへ", root_path %>
+          <% else %>
+            <%= link_to "トップへ", current_user %>
+          <% end %>
+        </li>
         <% if logged_in? %>  <!--sessionsヘルパーメソッド-->
-          <li><%= link_to "ユーザ一覧", users_path %></li>
+          <% if current_user.admin? %> <!--adminかどうか-->
+            <li><%= link_to "ユーザ一覧", users_path %></li>
+            <li><%= link_to "出勤社員一覧", "#" %></li>
+            <li><%= link_to "拠点情報の修正", "#" %></li>
+            <li><%= link_to "基本情報の更新", "#" %></li>
+          <% end %>
           <li class="dropdown">  <!-- Bootstrapクラスでレイアウト変更。有効化するため、JavaScriptとjQeryを読み込む指定をする(application.js)-->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               アカウント <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><%= link_to "ユーザー勤怠情報表示", current_user %></li>
-              <li><%= link_to "設定", edit_user_path(current_user) %></li>  <!-- 現在のユーザー情報が取得できるようcurrent_userを引数で渡している -->
+              <li><%= link_to "アカウント情報の更新", edit_user_path(current_user) %></li>  <!-- 現在のユーザー情報が取得できるようcurrent_userを引数で渡している -->
               <li class="divider"></li>
               <li>
                 <%= link_to "ログアウト", logout_path, method: :delete %>

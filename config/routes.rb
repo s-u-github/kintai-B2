@@ -38,6 +38,9 @@ Rails.application.routes.draw do
   end
   
   resources :attendances do
+    collection do
+      get 'attendance_list', as: :attendance_list # 出勤社員一覧ページ
+    end
     
     member do
       patch 'update_attendance_info', as: :update_attendance_info # 勤怠変更お知らせの更新

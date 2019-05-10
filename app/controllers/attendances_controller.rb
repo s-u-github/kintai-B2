@@ -107,6 +107,12 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
   
+  # 出勤社員一覧ページ
+  def attendance_list
+    # usersテーブルとattendancesテーブルの両方のテーブルの値を取得するため、includesメソッドを使用
+    @users = User.all.includes(:attendances)
+  end
+  
   private
     
     # 勤怠編集の更新で使用

@@ -1,0 +1,30 @@
+<% provide(:title, '出勤社員一覧') %>
+
+<h1>出勤社員一覧</h1>
+  
+<div>
+  <table class = "table-bordered table-condensed table-striped">
+    <thead>
+      <tr>
+        <td>社員番号</td>
+        <td>名前</td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @users.each do |user| %>
+       <% user.attendances.each do |attendance| %>
+          <!-- 出社時間が存在かつ退勤時間がnilかつ日付が本日の場合、真 -->
+          <% if attendance.started_at.present? && attendance.finished_at.nil? && attendance.worked_on == Date.today %>
+          <tr>
+            <!-- 社員番号 -->
+            <td><%= user.code %></td>
+            <!-- 名前 -->
+            <td><%= user.name %></td>
+          </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

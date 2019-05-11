@@ -12,8 +12,8 @@
     </thead>
     
     <tbody>
-      <% @users.each do |user| %>
-       <% user.attendances.each do |attendance| %>
+      <% @users.each do |user| %> <!-- userを繰り返し渡す -->
+       <% user.attendances.each do |attendance| %> <!-- 受け取ったuser_idのattendaceを繰り返す -->
           <!-- 出社時間が存在かつ退勤時間がnilかつ日付が本日の場合、真 -->
           <% if attendance.started_at.present? && attendance.finished_at.nil? && attendance.worked_on == Date.today %>
           <tr>

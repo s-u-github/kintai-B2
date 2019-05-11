@@ -59,3 +59,13 @@ User.create!(name:  "上司D",
                password:              password,
                password_confirmation: password)
 end
+
+Base.create!(base_number: "1", base_name: "拠点一", base_info: "出社")
+
+Base.create!(base_number: "2", base_name: "拠点二", base_info: "出社")
+
+Base.create!(base_number: "3", base_name: "拠点三", base_info: "退社")
+
+Base.create!(base_number: "4", base_name: "拠点四", base_info: "出社")
+
+Base.create!(base_number: "5", base_name: "拠点五", base_info: "退社")

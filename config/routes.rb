@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
 # static_pagesコントローラー
   # ルートページ
   root 'static_pages#home'
@@ -20,11 +21,29 @@ Rails.application.routes.draw do
   # ログイン状態を破棄
   delete '/logout', to: 'sessions#destroy'
   
-# user > attendanceコントローラー
+# users > attendancesコントローラー
   # 勤怠編集画面へ ( 何年何月の勤怠表示画面から遷移したかも判定し、編集画面の１ヶ月分の表示を合わせる必要があるため:dateを入れる )
   get 'user/:id/attendances/:date/edit', to: 'attendances#edit', as: :edit_attendances
   # 勤怠編集の更新
   patch 'user/:id/attendances/:date/update', to: 'attendances#update', as: :update_attendances
+  
+# basesコントローラー
+  # # 拠点情報ページへ
+  # get 'bases/index', to: 'bases#index'
+  # # 拠点情報の追加ページ
+  # get 'bases/new', to: 'bases#new'
+  # # 拠点情報の新規作成
+  # post 'bases/create', to: 'bases#create', as: :bases
+  # # 拠点情報の編集ページ
+  # get 'bases/:id/edit', to: 'bases#edit', as: :edit_base
+  # # 拠点情報の更新
+  # patch 'bases/:id', to: 'bases#update', as: :base
+  # # 拠点情報の削除
+  # delete 'bases/:id', to: 'bases#destroy'
+  
+# baseリソース
+  resources :bases do
+  end
   
 # usersリソース
   resources :users do
@@ -50,4 +69,5 @@ Rails.application.routes.draw do
       patch 'update_month_info', as: :update_month_info # １ヶ月分の勤怠申請お知らせの更新
     end
   end
+
 end

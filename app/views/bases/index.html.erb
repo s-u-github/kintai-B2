@@ -1,0 +1,49 @@
+<% provide(:title, "拠点一覧") %>
+<h1>拠点一覧</h1>
+
+<div>
+  <table class = "table-bordered table-condensed table-striped">
+    <thead>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>拠点番号</td>
+        <td>拠点名</td>
+        <td>勤怠情報</td>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @bases.each do |base| %>
+        <tr>
+          <!-- 修正ボタン。remoteでモーデル準備。editアクション。-->
+          <td align="left">
+            <%= link_to '修正', edit_basis_path(base), remote: true, class: "btn btn-primary", style: "width:40%;" %>
+          </td>
+          <!-- 削除ボタン。deleteはメソッドを明示する必要がある。destroyアクション。-->
+          <td align="center">
+            <%= link_to "削除", basis_path(base), method: :delete, data: {confirm: "削除してよろしいですか？"}, class: "btn btn-primary" %>
+          </td>
+          <!-- 拠点番号 -->
+          <td><%= base.base_number %></td>
+          <!-- 拠点名 -->
+          <td><%= base.base_name %></td>
+          <!-- 勤怠情報 -->
+          <td><%= base.base_info %></td>
+        </tr>
+      <% end %>
+    </tbody>
+      
+    <tfoot>
+      <tr>
+        <!-- 拠点情報追加ボタン。remoteでモーダル準備。newアクション。-->
+        <td colspan="5" align="left">
+          <%= link_to '拠点情報の追加', new_basis_path, remote: true, class: "btn btn-primary" %>
+
+          <!-- モーダル内容 -->
+          <div id="base-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

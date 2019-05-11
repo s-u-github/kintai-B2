@@ -29,7 +29,7 @@
           <% if current_user.admin? %> <!--adminかどうか-->
             <li><%= link_to "ユーザ一覧", users_path %></li>
             <li><%= link_to "出勤社員一覧", attendance_list_attendances_path %></li>
-            <li><%= link_to "拠点情報の修正", "#" %></li>
+            <li><%= link_to "拠点情報の修正", bases_path %></li>
             <li><%= link_to "基本情報の更新", "#" %></li>
           <% end %>
           <li class="dropdown">  <!-- Bootstrapクラスでレイアウト変更。有効化するため、JavaScriptとjQeryを読み込む指定をする(application.js)-->

@@ -54,11 +54,13 @@ Rails.application.routes.draw do
     
     # 勤怠情報を保存する
     resources :attendances, only: :create #リソースをネストしていることで/users/:user_id/attendanceというURLになる。
+    
   end
   
   resources :attendances do
     collection do
       get 'attendance_list', as: :attendance_list # 出勤社員一覧ページ
+      get 'csv_output', as: :csv_output # csv出力アクション
     end
     
     member do

@@ -130,6 +130,7 @@ class UsersController < ApplicationController
     end
   end
   
+  
   private
   
     # Strong Parameters 必須となるパラメータと許可されたパラメータを指定することができる。

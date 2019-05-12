@@ -113,6 +113,14 @@ class AttendancesController < ApplicationController
     @users = User.all.includes(:attendances)
   end
   
+  # csv出力
+  def csv_output
+    @user = User.find(current_user.id)
+    @attendances = @user.attendances.all
+    send_data render_to_string, filename: "#{@user.name}の勤怠情報.csv", type: :csv
+  end
+  
+  
   private
     
     # 勤怠編集の更新で使用

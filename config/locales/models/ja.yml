@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+    attributes:
+      user:
+        id: ID
+        name: 名前
+        created_at: 登録日時
+        updated_at: 更新日時
+        email: メールアドレス
+        department: 所属
+        password: パスワード
+        password_confirmation: パスワードの確認
+        basic_time: 基本勤務時間
+        work_time: 指定勤務開始時間
+        work_time_finish: 指定勤務終了時間
+        code: 社員番号
+        card_id: カードID

@@ -12,8 +12,8 @@ class SessionsController < ApplicationController
     # 有効なユーザーで、かつパスワードの認証に成功した場合のみtrueになる
     if user && user.authenticate(params[:session][:password])
       log_in user
-      # sessionsヘルパーメソッド
-      redirect_back_or user
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user) # sessionsヘルパーメソッド
+      redirect_back_or user # sessionsヘルパーメソッド
     else
       flash.now[:danger] = 'メールアドレスとパスワードの情報が一致しませんでした。'
       render 'new'
@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
   
   def destroy
     # sessionsヘルパーメソッド
-    log_out
+    log_out if logged_in? # ログイン中の場合のみログアウトする
     redirect_to root_url
   end
 

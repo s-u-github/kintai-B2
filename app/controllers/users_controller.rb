@@ -116,19 +116,19 @@ class UsersController < ApplicationController
   
   # 基本情報編集ページ
   def edit_basic_info
-    @user = User.find(params[:id])  
+    # @user = User.find(params[:id])  
   end
   
   # 基本情報編集の更新
-  def update_basic_info
-    @user = User.find(params[:id])
-    if @user.update_attributes(basic_info_params)
-      flash[:success] = "基本情報を更新しました。"
-      redirect_to @user
-    else
-      render 'edit_basic_info'
-    end
-  end
+  # def update_basic_info
+  #   @user = User.find(params[:id])
+  #   if @user.update_attributes(basic_info_params)
+  #     flash[:success] = "基本情報を更新しました。"
+  #     redirect_to @user
+  #   else
+  #     render 'edit_basic_info'
+  #   end
+  # end
   
   
   private

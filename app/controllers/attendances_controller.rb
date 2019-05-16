@@ -86,10 +86,13 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:id])
     day = params[:first_day]
     @attendance = @user.attendances.find_by(worked_on: day)
-    if @attendance.update_attributes(update_month_params)
+    unless params[:attendance][:month_order_id].empty? # 申請時、所属長選択が空の場合
+      @attendance.update_attributes(update_month_params)
       flash[:success] = "１ヶ月の勤怠を申請をしました。"
-      redirect_to @user
+    else
+      flash[:danger] = "所属長を選択してください。"
     end
+    redirect_to @user
   end
   
   # １ヶ月分の勤怠申請の更新

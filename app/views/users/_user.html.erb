@@ -1,6 +1,6 @@
 <li>
   <!-- 現在のユーザーが管理者(admin属性がtrue)の場合に限り -->
-  <% if current_user.admin? && !current_user?(user) %>
+  <!--< if current_user.admin? && !current_user?(user) %>-->
 
   <%= user.name %>
     <div>
@@ -64,5 +64,5 @@
           </div> <!-- id="collapse -->
       </div> <!-- panel panel-default -->
     </div> <!-- panel-group -->
-  <% end %> <!-- if current_user.admin? -->
+  <!--< end %> <!-- if current_user.admin? -->
 </li>

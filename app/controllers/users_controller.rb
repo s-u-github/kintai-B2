@@ -4,7 +4,9 @@ class UsersController < ApplicationController
   # 正しいユーザーでなければ実行できない
   before_action :correct_user,   only: [:edit, :update]
   # 管理者でなければ実行できない
-  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info]
+  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index]
+  # 管理者以外
+  before_action :not_admin_user, only: [:show, :edit, :edit]
   
   # ユーザー一覧ページ
   def index
@@ -109,8 +111,12 @@ class UsersController < ApplicationController
   
   # ユーザーの削除
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "削除しました。"
+    if current_user.admin?
+      flash[:danger] = "管理者は削除できません。"
+    else
+      User.find(params[:id]).destroy
+      flash[:success] = "削除しました。"
+    end
     redirect_to users_url
   end
   
@@ -183,6 +189,11 @@ class UsersController < ApplicationController
     # 管理者かどうか確認
     def admin_user
       redirect_to(root_url) unless current_user.admin?
+    end
+    
+    # 管理者以外
+    def not_admin_user
+      redirect_to(root_url) if current_user.admin?
     end
     
     # CSVインポート

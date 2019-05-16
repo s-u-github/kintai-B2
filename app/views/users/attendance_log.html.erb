@@ -52,13 +52,9 @@
   <%= render 'log_table' %>
 </div>
 
-<!-- jsで使うデータ -->
-<!--<input name="current_user_name" type="hidden" value="<= current_user.id %>" id='current_user_id'>-->
 
 <script>
 
-  // var id = $('#current_user_id').val() // 現在のユーザーIDを取得
-  
   // 年
   $('#year').css('color', 'red')
   $('#search-year > li').on('click', function() { // > liは子セレクターといい、search-yearの子要素であるliを指定している

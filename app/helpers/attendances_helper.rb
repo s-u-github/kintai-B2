@@ -56,7 +56,9 @@ module AttendancesHelper
   def current_month_status(day)
     @user = User.find(params[:id])
     @attendance = @user.attendances.find_by(worked_on: day)
-    if @attendance.month_order_id == "承認" &&  @attendance.order_status.present?
+    if @attendance.month_order_id == "上司A" || @attendance.month_order_id == "上司B" || @attendance.month_order_id == "上司C" || @attendance.month_order_id == "上司D"
+      "#{@attendance.month_order_id}に申請中"
+    elsif @attendance.month_order_id == "承認" &&  @attendance.order_status.present?
       "#{@attendance.order_status}から承認済"
     elsif @attendance.month_order_id == "否認" &&  @attendance.order_status.present?
       "#{@attendance.order_status}から否認"

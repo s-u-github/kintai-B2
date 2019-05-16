@@ -16,8 +16,6 @@ class BasesController < ApplicationController
     if @base.save
       flash[:success] = "拠点情報を追加しました。"
       redirect_to bases_path
-    else
-      render 'index'
     end
   end
   
@@ -27,8 +25,6 @@ class BasesController < ApplicationController
     if @base.update(base_params)
       flash[:success] = "更新しました。"
       redirect_to bases_path
-    else
-      render 'index'
     end
   end
   
@@ -42,7 +38,7 @@ class BasesController < ApplicationController
     @base = Base.find(params[:id])
     @base.destroy
     flash[:success] = "削除しました。"
-    redirect_to bases_index_path
+    redirect_to bases_path
   end
   
   private

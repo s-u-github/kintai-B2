@@ -48,7 +48,7 @@ class AttendancesController < ApplicationController
     update_attendance_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(attendance_order_id: item[:attendance_order_id])
+        attendance.update_attributes(attendance_order_id: item[:attendance_order_id], order_status: current_user.name, approval_day: Date.today)
         update_count += 1
       end
     end
@@ -73,7 +73,7 @@ class AttendancesController < ApplicationController
     update_overtime_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(over_order_id: item[:over_order_id])
+        attendance.update_attributes(over_order_id: item[:over_order_id], order_status: current_user.name, approval_day: Date.today)
         update_count += 1
       end
     end
@@ -99,7 +99,7 @@ class AttendancesController < ApplicationController
     update_month_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(month_order_id: item[:month_order_id], order_status: current_user.name)
+        attendance.update_attributes(month_order_id: item[:month_order_id], order_status: current_user.name, approval_day: Date.today)
         update_count += 1
       end
     end

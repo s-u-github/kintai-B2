@@ -1,0 +1,135 @@
+<% provide(:title, "勤怠修正ログ(承認済)") %>
+
+<h1>勤怠修正ログ（承認済）</h1>
+
+<!-- リセットボタン -->
+<button type="button" class="btn btn-default" id="reset">リセット</button>
+
+<!-- 検索 年 -->
+<div class="input-group">
+	<span class="input-group-btn">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			年
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" id="search-year">
+			<li><a href="#" value="2017">2017</a></li>
+			<li><a href="#" value="2018">2018</a></li>
+			<li><a href="#" value="2019">2019</a></li>
+		</ul>
+	</span>
+	<!-- テキスト部分。readonlyで書き込みできないようにして、valueで初期表示を設定 -->
+	<input type="text" class="form-control" id="year" style="width:15%;" value="<%= Time.now.year %>" readonly>
+</div>
+
+<!-- 検索 月 -->
+<div class="input-group">
+	<span class="input-group-btn">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			月
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" id="search-month">
+			<li><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li><a href="#">6</a></li>
+			<li><a href="#">7</a></li>
+			<li><a href="#">8</a></li>
+			<li><a href="#">9</a></li>
+			<li><a href="#">10</a></li>
+			<li><a href="#">11</a></li>
+			<li><a href="#">12</a></li>
+		</ul>
+	</span>
+	<!-- テキスト部分。readonlyで書き込みできないようにして、valueで初期表示を設定 -->
+	<input type="text" class="form-control" id="month" style="width:15%;" value="<%= Time.now.month %>" readonly>
+</div>
+
+<div id="relord">
+  <%= render 'log_table' %>
+</div>
+
+<!-- jsで使うデータ -->
+<!--<input name="current_user_name" type="hidden" value="<= current_user.id %>" id='current_user_id'>-->
+
+<script>
+
+  // var id = $('#current_user_id').val() // 現在のユーザーIDを取得
+  
+  // 年
+  $('#year').css('color', 'red')
+  $('#search-year > li').on('click', function() { // > liは子セレクターといい、search-yearの子要素であるliを指定している
+    var SearchYear = $(this).text();　// クリックされているsearch-year(子のli)の要素を取得する
+    $('#year').attr('value', SearchYear); // 指定した属性(value)にvalue(SearchYear)の値を設定する
+    var year = $('#year').val(); // 選択している値(#year)を取得することが出来きる
+    var month = $('#month').val();　// 選択している値(#month)を取得することが出来きる
+    $.ajax({
+      url: "attendance_log",
+      type: "GET",
+      data: { year : year,
+              month : month,
+      },
+      dataType: "html",
+    }).done(function(data, textStatus, jqXHR){
+      // 成功の場合処理
+      alert("ファイルの取得に成功しました");
+      $("#relord").html(data);
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      // エラーの場合処理
+      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
+    });
+  });
+
+  // 月
+  $('#month').css('color', 'red')
+  $('#search-month > li').on('click', function() { // > liは子セレクターといい、search-yearの子要素であるliを指定している
+    var SearchMonth = $(this).text();　// クリックされているsearch-year(子のli)の要素を取得する
+    $('#month').attr('value', SearchMonth); // 指定した属性(value)にvalue(SearchYear)の値を設定する
+    var year = $('#year').val(); // 選択している値(#year)を取得することが出来きる
+    var month = $('#month').val();　// 選択している値(#month)を取得することが出来きる
+    $.ajax({
+      url: "attendance_log",
+      type: "GET",
+      data: { year : year,
+              month : month,
+      },
+      dataType: "html",
+    }).done(function(data, textStatus, jqXHR){
+      // 成功の場合処理
+      alert("ファイルの取得に成功しました");
+      $("#relord").html(data);
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      // エラーの場合処理
+      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
+    });
+  });
+
+  // リセット
+  $('#reset').on('click', function() {
+    var hiduke = new Date(); 
+    var year = hiduke.getFullYear(); 
+    var month = hiduke.getMonth() + 1; 
+    $('#year').attr('value', year);
+    $('#month').attr('value', month);
+    $.ajax({
+      url: "attendance_log",
+      type: "GET",
+      data: { year : year,
+              month : month,
+      },
+      dataType: "html",
+    }).done(function(data, textStatus, jqXHR){
+      // 成功の場合処理
+      alert("ファイルの取得に成功しました");
+      $("#relord").html(data);
+    }).fail(function(jqXHR, textStatus, errorThrown){
+      // エラーの場合処理
+      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
+    });
+  });
+
+
+</script>

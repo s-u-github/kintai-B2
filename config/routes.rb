@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     
     member do
       patch  'update_index', as: :update_index # ユーザ一覧の更新
+      get 'attendance_log', as: :attendance_log # 勤怠修正ログページ
     end
     
     # 勤怠情報を保存する

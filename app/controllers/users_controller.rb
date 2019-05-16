@@ -130,6 +130,18 @@ class UsersController < ApplicationController
   #   end
   # end
   
+  # 勤怠修正ログページ
+  def attendance_log
+    @user = User.find(params[:id])
+    # @attendance_logs = @user.attendances.where(attendance_order_id: "承認").order('worked_on')
+    if params[:year]
+      date = Date.new(params[:year].to_i, params[:month].to_i)
+      @attendance_logs = @user.attendances.where(attendance_order_id: "承認").where(worked_on: date.beginning_of_month..date.end_of_month)
+    else
+      @attendance_logs = @user.attendances.where(attendance_order_id: "承認").where(worked_on: Time.now.beginning_of_month..Time.now.end_of_month)
+    end
+  end
+  
   
   private
   

@@ -41,7 +41,7 @@
       <!-- CSV出力　-->
       <%= link_to "CSV出力", csv_output_attendances_path(format: :csv), class: "btn btn-primary" %><br>
       <!-- 勤怠修正ログへ -->
-      <%= link_to "勤怠修正ログ(承認済み)", '#', class: "btn btn-primary btn-log" %>
+      <%= link_to "勤怠修正ログ(承認済み)", attendance_log_user_path(@user), class: "btn btn-primary btn-log" %>
       
     <% else %>
       <!-- お知らせモーダルの確認時に使う -->
@@ -165,7 +165,7 @@
           <!-- 指示者確認㊞ -->
           <td>
             <%= overtime_display(day) %><br>
-          　<%= attendance_display(day) %>
+          　<%= attendance_display(day) %> <!-- attendanceヘルパーメソッド -->
           </td>
         </tr>
         
@@ -184,7 +184,7 @@
         <td colspan="5">
         <!-- １ヶ月分の勤怠申請 -->
         <td>
-          所属長承認&emsp;<%= current_month_status(@first_day) %><br>
+          所属長承認&emsp;<%= current_month_status(@first_day) %><br> <!-- attendanceヘルパーメソッド -->
           <!-- 現在のユーザーかどうか -->
           <% if current_user?(@user) %>
             <%= form_for @attendance, url: update_month_attendance_path(first_day: @first_day), method: :patch do |f| %>

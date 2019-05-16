@@ -48,7 +48,7 @@ module AttendancesHelper
     elsif date.attendance_order_id == "承認"
       "勤怠編集承認済"
     elsif date.attendance_order_id == "否認"
-      "残業編集否認"
+      "勤怠編集否認"
     end
   end
 

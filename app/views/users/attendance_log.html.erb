@@ -13,9 +13,9 @@
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu" id="search-year">
-			<li><a href="#" value="2017">2017</a></li>
-			<li><a href="#" value="2018">2018</a></li>
-			<li><a href="#" value="2019">2019</a></li>
+			<li><a href="#">2017</a></li>
+			<li><a href="#">2018</a></li>
+			<li><a href="#">2019</a></li>
 		</ul>
 	</span>
 	<!-- テキスト部分。readonlyで書き込みできないようにして、valueで初期表示を設定 -->
@@ -48,84 +48,145 @@
 	<input type="text" class="form-control" id="month" style="width:15%;" value="<%= Time.now.month %>" readonly>
 </div>
 
-<div id="relord">
+<div>
   <%= render 'log_table' %>
 </div>
 
+<input type="hidden" id="user-id" value="<%= @user.id %>">
 
 <script>
 
-  // 年
-  $('#year').css('color', 'red')
-  $('#search-year > li').on('click', function() { // > liは子セレクターといい、search-yearの子要素であるliを指定している
-    var SearchYear = $(this).text();　// クリックされているsearch-year(子のli)の要素を取得する
-    $('#year').attr('value', SearchYear); // 指定した属性(value)にvalue(SearchYear)の値を設定する
-    var year = $('#year').val(); // 選択している値(#year)を取得することが出来きる
-    var month = $('#month').val();　// 選択している値(#month)を取得することが出来きる
-    $.ajax({
-      url: "attendance_log",
-      type: "GET",
-      data: { year : year,
-              month : month,
-      },
-      dataType: "html",
-    }).done(function(data, textStatus, jqXHR){
-      // 成功の場合処理
-      alert("ファイルの取得に成功しました");
-      $("#relord").html(data);
-    }).fail(function(jqXHR, textStatus, errorThrown){
-      // エラーの場合処理
-      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
-    });
-  });
+// ユーザーID
+var id = $('#user-id').val();
 
-  // 月
-  $('#month').css('color', 'red')
-  $('#search-month > li').on('click', function() { // > liは子セレクターといい、search-yearの子要素であるliを指定している
-    var SearchMonth = $(this).text();　// クリックされているsearch-year(子のli)の要素を取得する
-    $('#month').attr('value', SearchMonth); // 指定した属性(value)にvalue(SearchYear)の値を設定する
-    var year = $('#year').val(); // 選択している値(#year)を取得することが出来きる
-    var month = $('#month').val();　// 選択している値(#month)を取得することが出来きる
-    $.ajax({
-      url: "attendance_log",
-      type: "GET",
-      data: { year : year,
-              month : month,
-      },
-      dataType: "html",
-    }).done(function(data, textStatus, jqXHR){
-      // 成功の場合処理
-      alert("ファイルの取得に成功しました");
-      $("#relord").html(data);
-    }).fail(function(jqXHR, textStatus, errorThrown){
-      // エラーの場合処理
-      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
-    });
+// 年
+$('#year').css('color', 'red')
+$('#search-year > li').on('click', function() {
+  var SearchYear = $(this).text() // 変数SearchYearにid=search-yearのli要素内のテキストを取得
+  $('#year').attr('value', SearchYear)  // id=yearの指定した属性(value)にvalue(SearchYear)の値を設定します。
+  var year = $('#year').val()    // 変数yearにid=yearのvalueを入れる
+  var month = $('#month').val()  // 変数monthにid=monthのvalueを入れる
+  $.ajax({
+    type:'GET', // リクエストのタイプはGETです
+    url: `/users/${id}/attendance_log`, // URLは"/meals"を指定します
+    data: {year: year, month: month}, // コントローラへフォームの値を送信します
+    dataType: 'json' // データの型はjsonで指定します
+  })
+  .done(function(data){
+    // 通信に成功した場合の処理です
+    $('#relord').empty(); //前回の検索結果が残っている場合はそれを消します
+    data.forEach(function(log){
+      // $('#relord').append(`<li>${log.worked_on} </li>`);
+      $('#relord').append(  //各要素内の一番後ろに指定したHTMLやエレメントを挿入する。
+      `<tr>
+        <!-- 日付 -->
+        <td>${log.worked_on}</td>
+        <!-- 変更前出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更前退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 変更後出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更後退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 承認者 -->
+        <td>${log.order_status}</td>
+        <!-- 承認日 -->
+        <td>${log.approval_day}</td>
+      </tr>`);
+    }) //データは配列形式でかえってくるので、forEachで繰り返し処理をします
+  })
+  .fail(function(){
+    // 通信に失敗した場合の処理です
+    alert('検索に失敗しました') // alertで検索失敗の旨を表示します
   });
+});
 
-  // リセット
-  $('#reset').on('click', function() {
-    var hiduke = new Date(); 
-    var year = hiduke.getFullYear(); 
-    var month = hiduke.getMonth() + 1; 
-    $('#year').attr('value', year);
-    $('#month').attr('value', month);
-    $.ajax({
-      url: "attendance_log",
-      type: "GET",
-      data: { year : year,
-              month : month,
-      },
-      dataType: "html",
-    }).done(function(data, textStatus, jqXHR){
-      // 成功の場合処理
-      alert("ファイルの取得に成功しました");
-      $("#relord").html(data);
-    }).fail(function(jqXHR, textStatus, errorThrown){
-      // エラーの場合処理
-      $("#relord").text("エラーが発生しました。ステータス：" + jqXHR.status);
-    });
+// 月
+$('#month').css('color', 'red')
+$('#search-month > li').on('click', function() {
+  var SearchMonth = $(this).text()
+  $('#month').attr('value', SearchMonth)
+  var year = $('#year').val()
+  var month = $('#month').val()
+  $.ajax({
+    type:'GET', // リクエストのタイプはGETです
+    url: `/users/${id}/attendance_log`, // URLは"/meals"を指定します
+    data: {year: year, month: month}, // コントローラへフォームの値を送信します
+    dataType: 'json' // データの型はjsonで指定します
+  })
+  .done(function(data){
+    // 通信に成功した場合の処理です
+    $('#relord').empty(); //前回の検索結果が残っている場合はそれを消します
+    data.forEach(function(log){
+      // $('#relord').append(`<li>${log.worked_on} </li>`);
+      $('#relord').append(  //各要素内の一番後ろに指定したHTMLやエレメントを挿入する。
+      `<tr>
+        <!-- 日付 -->
+        <td>${log.worked_on}</td>
+        <!-- 変更前出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更前退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 変更後出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更後退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 承認者 -->
+        <td>${log.order_status}</td>
+        <!-- 承認日 -->
+        <td>${log.approval_day}</td>
+      </tr>`);
+    }) //データは配列形式でかえってくるので、forEachで繰り返し処理をします
+  })
+  .fail(function(){
+    // 通信に失敗した場合の処理です
+    alert('検索に失敗しました') // alertで検索失敗の旨を表示します
   });
+});
+
+// リセット
+$('#reset').on('click', function() {
+  var hiduke = new Date(); 
+  var year = hiduke.getFullYear(); 
+  var month = hiduke.getMonth() + 1; 
+  $('#year').attr('value', year);
+  $('#month').attr('value', month);
+  $.ajax({
+    type:'GET', // リクエストのタイプはGETです
+    url: `/users/${id}/attendance_log`, // URLは"/meals"を指定します
+    data: {year: year, month: month}, // コントローラへフォームの値を送信します
+    dataType: 'json' // データの型はjsonで指定します
+  })
+  .done(function(data){
+    // 通信に成功した場合の処理です
+    $('#relord').empty(); //前回の検索結果が残っている場合はそれを消します
+    data.forEach(function(log){
+      // $('#relord').append(`<li>${log.worked_on} </li>`);
+      $('#relord').append(  //各要素内の一番後ろに指定したHTMLやエレメントを挿入する。
+      `<tr>
+        <!-- 日付 -->
+        <td>${log.worked_on}</td>
+        <!-- 変更前出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更前退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 変更後出社時間 -->
+        <td>${log.started_at}</td>
+        <!-- 変更後退社時間 -->
+        <td>${log.finished_at}</td>
+        <!-- 承認者 -->
+        <td>${log.order_status}</td>
+        <!-- 承認日 -->
+        <td>${log.approval_day}</td>
+      </tr>`);
+    }) //データは配列形式でかえってくるので、forEachで繰り返し処理をします
+  })
+  .fail(function(){
+    // 通信に失敗した場合の処理です
+    alert('検索に失敗しました') // alertで検索失敗の旨を表示します
+  });
+});
 
 
 </script>

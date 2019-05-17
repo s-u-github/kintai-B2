@@ -13,19 +13,16 @@ class BasesController < ApplicationController
   # 拠点情報の追加　作成
   def create
     @base = Base.create(base_params)
-    if @base.save
-      flash[:success] = "拠点情報を追加しました。"
-      redirect_to bases_path
-    end
+    flash[:success] = "拠点情報を追加しました。"
+    redirect_to bases_path
   end
   
   # 拠点情報の更新
   def update
     @base = Base.find(params[:id])
-    if @base.update(base_params)
-      flash[:success] = "更新しました。"
-      redirect_to bases_path
-    end
+    @base.update(base_params)
+    flash[:success] = "更新しました。"
+    redirect_to bases_path
   end
   
   # 拠点情報の編集ページ

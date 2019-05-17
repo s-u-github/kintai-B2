@@ -1,4 +1,6 @@
 class AttendancesController < ApplicationController
+  # 管理者はNG
+  before_action :not_admin_user, only: [:edit]
   
   # 勤怠情報を更新
   def create
@@ -154,5 +156,10 @@ class AttendancesController < ApplicationController
     # １ヶ月分の勤怠申請お知らせの更新で使用
     def update_month_info_params
       params.permit(attendances: [:month_order_id, :agreement])[:attendances]
+    end
+    
+    # 管理者はNG
+    def not_admin_user
+      redirect_to(root_url) if current_user.admin?
     end
 end

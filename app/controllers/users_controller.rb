@@ -5,8 +5,8 @@ class UsersController < ApplicationController
   before_action :correct_user,   only: [:edit, :update]
   # 管理者でなければ実行できない
   before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index]
-  # 管理者以外
-  before_action :not_admin_user, only: [:show, :edit, :edit]
+  # 管理者はNG
+  before_action :not_admin_user, only: [:show, :edit]
   
   # ユーザー一覧ページ
   def index
@@ -191,7 +191,7 @@ class UsersController < ApplicationController
       redirect_to(root_url) unless current_user.admin?
     end
     
-    # 管理者以外
+    # 管理者はNG
     def not_admin_user
       redirect_to(root_url) if current_user.admin?
     end

@@ -129,7 +129,13 @@
             <% end %> <!-- if current_user? その2 -->
           </td>
           <!-- 退社時間　時 -->
-          <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
+          <td>
+            <% if day.next_day == true %> <!-- 翌日チェックをしていた場合 -->
+              (翌日)<br><%= day.finished_at.to_s(:hour) if day.finished_at.present? %>
+            <% else %>
+              <%= day.finished_at.to_s(:hour) if day.finished_at.present? %>
+            <% end %>
+          </td>
           <!-- 退社時間　分 -->
           <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
           <!-- 退社ボタン -->
@@ -155,7 +161,13 @@
           <!-- 備考 -->
           <td><%= day.note if day.note.present? %></td>
           <!-- 終了予定時間(時) -->
-          <td><%= day.endplans_time.to_s(:hour) if day.endplans_time.present? %></td>
+          <td>
+            <% if day.next_day == true %> <!-- 翌日チェックをしていた場合 -->
+              (翌日)<br><%= day.endplans_time.to_s(:hour) if day.endplans_time.present? %>
+            <% else %>
+              <%= day.endplans_time.to_s(:hour) if day.endplans_time.present? %>
+            <% end %>
+          </td>
           <!-- 終了予定時間(分) -->
           <td><%= day.endplans_time.to_s(:min) if day.endplans_time.present? %></td>
           <!-- 時間外時間 -->

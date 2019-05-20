@@ -9,7 +9,7 @@
       </div>
       
       <div class="modal-body">
-        <%= form_for(@base, remote: true) do |f| %>
+        <%= form_for(@base, url: bases_path, method: :post, remote: true) do |f| %>
 
           <%= f.label :base_number, "拠点番号" %>
           <%= f.text_field :base_number, class: 'form-control' %>

@@ -13,7 +13,11 @@ module AttendancesHelper
 
   # 在社時間のフォーマット
   def working_time(started_at, finished_at)
-    format("%.2f", (((finished_at - started_at) / 60) / 60.0)) #この計算結果は秒数で返ってくるため、秒数を2度60で割っている
+    if started_at > finished_at # 翌日だった場合
+      format("%.2f", (((finished_at.tomorrow - started_at) / 60) / 60.0)) #この計算結果は秒数で返ってくるため、秒数を2度60で割っている
+    else
+      format("%.2f", (((finished_at - started_at) / 60) / 60.0)) #この計算結果は秒数で返ってくるため、秒数を2度60で割っている
+    end
   end
   
   # 在社時間の合計値
@@ -27,7 +31,11 @@ module AttendancesHelper
     work_time = User.find(id).work_time_finish # usersテーブルのwork_time_finishを取得
     end_adjust = Time.new(end_time.year, end_time.month, end_time.day, end_time.hour, end_time.min, 0) # end_plans_timeを新しく作り調整
     work_adjust = Time.new(end_time.year, end_time.month, end_time.day, work_time.hour, work_time.min, 0) # work_time_finishを新しく作り調整(年月)
-    format("%.2f", ((end_adjust - work_adjust) / 60) / 60)
+    if overtime.next_day == true  # 翌日だった場合
+      format("%.2f", ((end_adjust.tomorrow - work_adjust) / 60) / 60)
+    else
+      format("%.2f", ((end_adjust - work_adjust) / 60) / 60)
+    end
   end
 
   # 残業承認の表示
@@ -92,6 +100,8 @@ module AttendancesHelper
       elsif item[:started_at].blank? || item[:finished_at].blank?
         attendances = false
         break # breakは単純に繰り返し処理を中断する。
+      elsif item[:started_at] > item[:finished_at] && item[:next_day] == "true" # 翌日テェックがtrueの場合はOK
+        break
       elsif item[:started_at] > item[:finished_at]
         attendances = false
         break

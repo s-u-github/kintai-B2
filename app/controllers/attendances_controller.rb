@@ -33,8 +33,15 @@ class AttendancesController < ApplicationController
     if attendances_invalid?
       attendances_params.each do |key, value| # idと値
         attendance = Attendance.find(key) # idを使い更新対象となるAttendanceモデルのデータを取得
-        attendance.update_attributes(started_at_after: value[:started_at], finished_at_after: value[:finished_at],next_day: value[:next_day],
+        if value[:attendance_order_id] != "" && attendance.started_at == nil && attendance.finished_at == nil  # started_at,finished_atがnilならそのまま入力値を入れる
+          attendance.update_attributes(started_at: value[:started_at], finished_at: value[:finished_at], started_at_after: value[:started_at], finished_at_after: value[:finished_at],
+                                          next_day: value[:next_day], note: value[:note], attendance_order_id: value[:attendance_order_id])
+        elsif value[:attendance_order_id] == ""
+          next
+        else
+          attendance.update_attributes(started_at_after: value[:started_at], finished_at_after: value[:finished_at],next_day: value[:next_day],
                                         note: value[:note], attendance_order_id: value[:attendance_order_id]) # 編集した値に更新する
+        end
       end
       flash[:success] = '勤怠情報を更新しました。'
       redirect_to user_url(@user, params:{first_day: params[:date]})
@@ -51,7 +58,7 @@ class AttendancesController < ApplicationController
     update_attendance_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(attendance_order_id: item[:attendance_order_id], order_status: current_user.name,approval_day: Date.today)
+        attendance.update_attributes(attendance_order_id: item[:attendance_order_id], attendance_order_status: current_user.name, approval_day: Date.today)
         update_count += 1
       end
     end
@@ -76,7 +83,7 @@ class AttendancesController < ApplicationController
     update_overtime_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(over_order_id: item[:over_order_id], order_status: current_user.name, approval_day: Date.today)
+        attendance.update_attributes(over_order_id: item[:over_order_id], over_order_status: current_user.name)
         update_count += 1
       end
     end
@@ -105,7 +112,7 @@ class AttendancesController < ApplicationController
     update_month_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(month_order_id: item[:month_order_id], order_status: current_user.name, approval_day: Date.today)
+        attendance.update_attributes(month_order_id: item[:month_order_id], month_order_status: current_user.name, approval_day: Date.today)
         update_count += 1
       end
     end

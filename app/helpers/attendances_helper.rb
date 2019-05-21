@@ -43,9 +43,9 @@ module AttendancesHelper
     if date.over_order_id == "上司A" || date.over_order_id == "上司B" || date.over_order_id == "上司C" || date.over_order_id == "上司D"
       "残業申請中：#{date.over_order_id}"
     elsif date.over_order_id == "承認"
-      "残業承認済"
+      "残業承認済：#{date.over_order_status}"
     elsif date.over_order_id == "否認"
-      "残業否認"
+      "残業否認：#{date.over_order_status}"
     end
   end
 
@@ -54,9 +54,9 @@ module AttendancesHelper
     if date.attendance_order_id == "上司A" || date.attendance_order_id == "上司B" || date.attendance_order_id == "上司C" || date.attendance_order_id == "上司D"
       "勤怠編集申請中：#{date.attendance_order_id}"
     elsif date.attendance_order_id == "承認"
-      "勤怠編集承認済"
+      "勤怠編集承認済：#{date.attendance_order_status}"
     elsif date.attendance_order_id == "否認"
-      "勤怠編集否認"
+      "勤怠編集否認：#{date.attendance_order_status}"
     end
   end
 
@@ -66,10 +66,10 @@ module AttendancesHelper
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.month_order_id == "上司A" || @attendance.month_order_id == "上司B" || @attendance.month_order_id == "上司C" || @attendance.month_order_id == "上司D"
       "#{@attendance.month_order_id}に申請中"
-    elsif @attendance.month_order_id == "承認" &&  @attendance.order_status.present?
-      "#{@attendance.order_status}から承認済"
-    elsif @attendance.month_order_id == "否認" &&  @attendance.order_status.present?
-      "#{@attendance.order_status}から否認"
+    elsif @attendance.month_order_id == "承認" &&  @attendance.month_order_status.present?
+      "#{@attendance.month_order_status}から承認済"
+    elsif @attendance.month_order_id == "否認" &&  @attendance.month_order_status.present?
+      "#{@attendance.month_order_status}から否認"
     else
       "未"
     end

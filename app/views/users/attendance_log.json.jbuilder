@@ -7,6 +7,6 @@ json.array! @attendance_logs do |log|
   json.finished_at       log.finished_at.to_s(:time)
   json.started_at_after  log.started_at_after.to_s(:time)
   json.finished_at_after log.finished_at_after.to_s(:time)
-  json.order_status      log.order_status
+  json.attendance_order_status      log.attendance_order_status
   json.approval_day      log.approval_day
 end

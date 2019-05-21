@@ -33,7 +33,8 @@ class AttendancesController < ApplicationController
     if attendances_invalid?
       attendances_params.each do |key, value| # idと値
         attendance = Attendance.find(key) # idを使い更新対象となるAttendanceモデルのデータを取得
-        attendance.update_attributes(value) # 編集した値に更新する
+        attendance.update_attributes(started_at_after: value[:started_at], finished_at_after: value[:finished_at],next_day: value[:next_day],
+                                        note: value[:note], attendance_order_id: value[:attendance_order_id]) # 編集した値に更新する
       end
       flash[:success] = '勤怠情報を更新しました。'
       redirect_to user_url(@user, params:{first_day: params[:date]})
@@ -50,7 +51,7 @@ class AttendancesController < ApplicationController
     update_attendance_info_params.each do |id, item|
       if item[:agreement] == "true"
         attendance = Attendance.find(id)
-        attendance.update_attributes(attendance_order_id: item[:attendance_order_id], order_status: current_user.name, approval_day: Date.today)
+        attendance.update_attributes(attendance_order_id: item[:attendance_order_id], order_status: current_user.name,approval_day: Date.today)
         update_count += 1
       end
     end

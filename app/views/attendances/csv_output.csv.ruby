@@ -6,8 +6,16 @@ CSV.generate do |csv|
   @attendances.each do |attendance|
     csv_column_values = [
       attendance.worked_on,
-      attendance.started_at,
-      attendance.finished_at,
+      if attendance.started_at.nil?
+        attendance.started_at
+      else
+        attendance.started_at.strftime("%R")
+      end,
+      if attendance.finished_at.nil?
+        attendance.finished_at
+      else
+        attendance.finished_at.strftime("%R")
+      end
     ]
     csv << csv_column_values
   end

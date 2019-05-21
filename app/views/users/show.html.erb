@@ -116,9 +116,21 @@
             <% end %>
           </td> <!-- 日付からwdayメソッドで曜日を取得 -->
           <!-- 出社時間　時 -->
-          <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td>
+          <td>
+            <% if day.started_at_after.present? %> <!-- 変更後があればそれを表示 -->
+              <%= day.started_at_after.to_s(:hour) %>
+            <% elsif day.started_at_after.present? %>
+              <%= day.started_at.to_s(:hour) %>
+            <% end %>
+          </td>
           <!-- 出社時間　分 -->
-          <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
+          <td>
+            <% if day.started_at_after.present? %> <!-- 変更後があればそれを表示 -->
+              <%= day.started_at_after.to_s(:min) %>
+            <% elsif day.started_at_after.present? %>
+              <%= day.started_at.to_s(:min) %>
+            <% end %>
+          </td>
           <!-- 出社ボタン -->
           <td>
             <!-- 現在のユーザーかどうか -->
@@ -130,14 +142,22 @@
           </td>
           <!-- 退社時間　時 -->
           <td>
-            <% if day.next_day == true %> <!-- 翌日チェックをしていた場合 -->
-              (翌日)<br><%= day.finished_at.to_s(:hour) if day.finished_at.present? %>
-            <% else %>
-              <%= day.finished_at.to_s(:hour) if day.finished_at.present? %>
+            <% if day.next_day == true && day.finished_at_after.present? %> <!-- 翌日チェックをしていた場合 -->
+              (翌日)<br><%= day.finished_at_after.to_s(:hour) %>
+            <% elsif day.finished_at_after.present? %> <!-- 変更後があればそれを表示 -->
+              <%= day.finished_at_after.to_s(:hour) %>
+            <% elsif day.finished_at.present? %>
+              <%= day.finished_at.to_s(:hour) %>
             <% end %>
           </td>
           <!-- 退社時間　分 -->
-          <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
+          <td>
+            <% if day.finished_at_after.present? %> <!-- 変更後があればそれを表示 -->
+              <%= day.finished_at_after.to_s(:min) %>
+            <% elsif day.finished_at.present? %>
+              <%= day.finished_at.to_s(:min) %>
+            <% end %>
+          </td>
           <!-- 退社ボタン -->
           <td>
             <!-- 現在のユーザーかどうか -->
@@ -149,12 +169,16 @@
           </td>
           <!-- 在社時間 -->
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
-              <%= working_time(day.started_at, day.finished_at) %>
+            <% if day.started_at_after.present? && day.finished_at_after.present? %> <!-- 変更後があれば -->
+              <%= working_time(day.started_at_after, day.finished_at_after) %>
               <!-- 在社時間の合計を計算するための伏線 -->
               <!-- 退勤時間から出勤時間を引いた結果を返す(秒数として返ってくる) -->
-              <% seconds = (day.finished_at - day.started_at).to_i %>
+              <% seconds = (day.finished_at_after - day.started_at_after).to_i %>
               <!-- 1日ごとに計算された在社時間の秒数を足し続けている。正常に計算できるようにto_iメソッドを使っている -->
+              <% @total_working_time = @total_working_time.to_i + seconds %>
+            <% elsif day.started_at.present? && day.finished_at.present? %>
+              <%= working_time(day.started_at, day.finished_at) %>
+              <% seconds = (day.finished_at - day.started_at).to_i %>
               <% @total_working_time = @total_working_time.to_i + seconds %>
             <% end %>
           </td>

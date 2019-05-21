@@ -17,13 +17,13 @@
         <!-- 日付 -->
         <td><%= log.worked_on %></td>
         <!-- 変更前出社時間 -->
-        <td><%= log.started_at.to_s(:time) %></td>
+        <td><%= log.started_at.to_s(:time) if log.started_at.present? %></td>
         <!-- 変更前退社時間 -->
-        <td><%= log.finished_at.to_s(:time) %></td>
+        <td><%= log.finished_at.to_s(:time) if log.started_at.present? %></td>
         <!-- 変更後出社時間 -->
-        <td><%= log.started_at.to_s(:time) %></td>
+        <td><%= log.started_at_after.to_s(:time) %></td>
         <!-- 変更後退社時間 -->
-        <td><%= log.finished_at.to_s(:time) %></td>
+        <td><%= log.finished_at_after.to_s(:time) %></td>
         <!-- 承認者 -->
         <td><%= log.order_status %></td>
         <!-- 承認日 -->

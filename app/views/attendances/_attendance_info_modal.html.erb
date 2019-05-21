@@ -53,21 +53,21 @@
                         <!-- 曜日 -->
                         <td><%= @week[value.worked_on.wday] %></td>
                         <!-- 変更前出社時間　時 -->
-                        <td><%= value.started_at.to_s(:hour) %></td>
+                        <td><%= value.started_at.to_s(:hour) if value.started_at.present? %></td>
                         <!-- 変更前出社時間　分 -->
-                        <td><%= value.started_at.to_s(:min) %></td>
+                        <td><%= value.started_at.to_s(:min) if value.started_at.present? %></td>
                         <!-- 変更前退社時間　時 -->
-                        <td><%= value.finished_at.to_s(:hour) %></td>
+                        <td><%= value.finished_at.to_s(:hour) if value.started_at.present? %></td>
                         <!-- 変更前退社時間　分 -->
-                        <td><%= value.finished_at.to_s(:min) %></td>
+                        <td><%= value.finished_at.to_s(:min) if value.started_at.present? %></td>
                         <!-- 変更後出社時間　時 -->
-                        <td><%= value.started_at.to_s(:hour) %></td>
+                        <td><%= value.started_at_after.to_s(:hour) %></td>
                         <!-- 変更後出社時間　分 -->
-                        <td><%= value.started_at.to_s(:min) %></td>
+                        <td><%= value.started_at_after.to_s(:min) %></td>
                         <!-- 変更後退社時間　時 -->
-                        <td><%= value.finished_at.to_s(:hour) %></td>
+                        <td><%= value.finished_at_after.to_s(:hour) %></td>
                         <!-- 変更後退社時間　分 -->
-                        <td><%= value.finished_at.to_s(:min) %></td>
+                        <td><%= value.finished_at_after.to_s(:min) %></td>
                         <!-- 備考 -->
                         <td><%= value.note %></td>
                         <!-- 指示者確認㊞ -->

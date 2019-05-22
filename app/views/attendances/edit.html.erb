@@ -34,11 +34,29 @@
                 <% end %>
               </td>
               <!-- 出社時間 -->
-              <td><%= af.time_field :started_at, class: "form-control" %></td>
+              <td>
+                <% if day.worked_on >= Date.today %> <!-- 当日以降は編集無効 disabled: true -->
+                  <%= af.time_field :started_at, class: "form-control", disabled: true %>
+                <% else %>
+                  <%= af.time_field :started_at, class: "form-control" %>
+                <% end %>
+              </td>
               <!-- 退社時間 -->
-              <td><%= af.time_field :finished_at, class: "form-control" %></td>
+              <td>
+                <% if day.worked_on >= Date.today %>
+                  <%= af.time_field :finished_at, class: "form-control", disabled: true %>
+                <% else %>
+                  <%= af.time_field :finished_at, class: "form-control" %>
+                <% end %>
+              </td>
               <!-- 翌日 -->
-              <td><%= af.check_box :next_day, {}, "true", "false" %></td>
+              <td>
+                <% if day.worked_on >= Date.today %>
+                  <%= af.check_box :next_day, {:disabled => true}, "true", "false" %>
+                <% else %>
+                  <%= af.check_box :next_day, {}, "true", "false" %>
+                <% end %>
+              </td>
               <!-- 在社時間 -->
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
@@ -46,9 +64,21 @@
                 <% end %>
               </td>
               <!-- 備考 -->
-              <td><%= af.text_field :note, class: "form-control" %></td>
+              <td>
+                <% if day.worked_on >= Date.today %>
+                  <%= af.text_field :note, class: "form-control", disabled: true %>
+                <% else %>
+                  <%= af.text_field :note, class: "form-control" %>
+                <% end %>
+              </td>
               <!--　指示者確認㊞　-->
-              <td><%= af.collection_select :attendance_order_id, User.superior_user_list_non_self(session), :name, :name, :include_blank => true %></td>
+              <td>
+                <% if day.worked_on >= Date.today %>
+                  <%= af.collection_select :attendance_order_id, {}, :name, :name, :disabled => true %>
+                <% else %>
+                  <%= af.collection_select :attendance_order_id, User.superior_user_list_non_self(session), :name, :name, :include_blank => true %>
+                <% end %>
+              </td>
             </tr>
           <% end %> <!-- fields_for -->
         <% end %> <!-- @dates.each -->

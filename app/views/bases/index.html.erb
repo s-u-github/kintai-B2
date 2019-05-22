@@ -18,7 +18,10 @@
         <tr>
           <!-- 修正ボタン。remoteでモーデル準備。editアクション。-->
           <td align="left">
-            <%= link_to '修正', edit_basis_path(base), remote: true, class: "btn btn-primary", style: "width:40%;" %>
+            <!-- data-targetでbase.idを送ることでid指定ができる -->
+            <a type="button" data-toggle="modal", data-target="#<%= base.id %>" class="btn btn-primary" style="width:40%;">修正</a>
+            <!-- モーダル内容 -->
+            <%= render partial: 'base_edit_modal', locals: {base: base} %>
           </td>
           <!-- 削除ボタン。deleteはメソッドを明示する必要がある。destroyアクション。-->
           <td align="center">
@@ -36,12 +39,15 @@
       
     <tfoot>
       <tr>
-        <!-- 拠点情報追加ボタン。remoteでモーダル準備。newアクション。-->
+        <!-- 拠点情報追加ボタン。newアクション。-->
         <td colspan="5" align="left">
-          <%= link_to '拠点情報の追加', new_basis_path, remote: true, class: "btn btn-primary" %>
-
+          <a type="button" data-toggle="modal", data-target="#base-create-modal" class="btn btn-primary">
+            拠点情報の追加
+          </a>
           <!-- モーダル内容 -->
-          <div id="base-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+          <%= render 'base_create_modal' %>
+          <!-- モーダル内容 -->
+          <!--<div id="base-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>-->
         </td>
       </tr>
     </tfoot>

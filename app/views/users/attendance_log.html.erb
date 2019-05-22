@@ -60,7 +60,6 @@
 var id = $('#user-id').val();
 
 // 年
-$('#year').css('color', 'red')
 $('#search-year > li').on('click', function() {
   var SearchYear = $(this).text() // 変数SearchYearにid=search-yearのli要素内のテキストを取得
   $('#year').attr('value', SearchYear)  // id=yearの指定した属性(value)にvalue(SearchYear)の値を設定します。
@@ -103,7 +102,6 @@ $('#search-year > li').on('click', function() {
 });
 
 // 月
-$('#month').css('color', 'red')
 $('#search-month > li').on('click', function() {
   var SearchMonth = $(this).text()
   $('#month').attr('value', SearchMonth)

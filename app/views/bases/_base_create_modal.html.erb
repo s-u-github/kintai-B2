@@ -1,15 +1,14 @@
 <!-- モーダル・ダイアログ -->
-<div class="modal-dialog modal-sm">
-  <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title", style="text-align:center;"><%= title %></h4>
-      </div>
-      
+<div class="modal fade" id="base-create-modal" tabindex="-1">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+				<h4 style="text-align: center;">拠点情報の追加</h4>
+			</div>
+			
       <div class="modal-body">
-        <%= form_for(@base, url: bases_path, method: :post, remote: true) do |f| %>
+        <%= form_for @base do |f| %>
 
           <%= f.label :base_number, "拠点番号" %>
           <%= f.text_field :base_number, class: 'form-control' %>
@@ -23,6 +22,7 @@
           <%= f.submit "保存する", class: "btn btn-primary" %>
           
         <% end %>
-      </div> <!-- modal-body -->
-  </div> <!-- modal-content -->
-</div> <!-- modal-dialog -->
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->

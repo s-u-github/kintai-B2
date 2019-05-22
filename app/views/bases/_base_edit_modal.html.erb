@@ -1,0 +1,28 @@
+<!-- モーダル・ダイアログ -->
+<div class="modal fade" id="<%= base.id %>"  tabindex="-1">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+				<h4 style="text-align: center;">拠点情報の編集</h4>
+			</div>
+			
+      <div class="modal-body">
+        <%= form_for base, url: "/bases/#{base.id}", method: :patch do |f| %>
+
+          <%= f.label :base_number, "拠点番号" %>
+          <%= f.text_field :base_number, class: 'form-control' %>
+  
+          <%= f.label :base_name, "拠点名" %>
+          <%= f.text_field :base_name, class: 'form-control' %>
+       
+          <%= f.label :base_info, "勤怠情報" %>
+          <%= f.text_field :base_info, class: 'form-control' %>
+
+          <%= f.submit "保存する", class: "btn btn-primary" %>
+                  
+        <% end %>
+      </div>
+    </div> <!-- modal-content -->
+  </div> <!-- modal-dialog -->
+</div> <!-- modal fade -->

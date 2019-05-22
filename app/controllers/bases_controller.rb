@@ -3,6 +3,7 @@ class BasesController < ApplicationController
   # 拠点一覧ページ
   def index
     @bases = Base.all
+    @base = Base.new
   end
   
   # 拠点情報の追加

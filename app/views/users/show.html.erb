@@ -143,7 +143,7 @@
           </td>
           <!-- 退社時間　時 -->
           <td>
-            <% if day.next_day == true && day.finished_at_after.present? %> <!-- 翌日チェックをしていた場合 -->
+            <% if day.next_day == true && day.finished_at_after < day.started_at_after %> <!-- 翌日チェックをしていた場合 -->
               (翌日)<br><%= day.finished_at_after.to_s(:hour) %>
             <% elsif day.finished_at_after.present? %> <!-- 変更後があればそれを表示 -->
               <%= day.finished_at_after.to_s(:hour) %>

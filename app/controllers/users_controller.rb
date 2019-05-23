@@ -205,11 +205,11 @@ class UsersController < ApplicationController
       # windowsで作られたファイルに対応するので、encoding: "SJIS"を付けている
       # headersオプションを使うと、CSVの初めの1行はheaderとして出力の際に無視される (nameなどの属性名部分)
       CSV.foreach(params[:users_file].path, headers: true) do |row| # CSV.foreach # ファイルから一行ずつ読み込み 又、application.rbでrequire 'csv'も必要
-        user = User.new({ name: row["name"], email: row["email"], department: row["department"], code: row["code"], card_id: row["card_id"], basic_time: row["basic_time"], 
-                              work_time: row["work_time"], work_time_finish: row["work_time_finish"], superior: row["superior"], admin: row["admin"], password: row["password"]})
+        user = User.new({ name: row["name"], email: row["email"], department: row["affiliation"], code: row["employee_number"], card_id: row["uid"], basic_time: row["basic_work_time"], 
+                              work_time: row["designated_work_start_time"], work_time_finish: row["designated_work_end_time"], superior: row["superior"], admin: row["admin"], password: row["password"]})
         if user.valid?
-            users << ::User.new({ name: row["name"], email: row["email"], department: row["department"], code: row["code"], card_id: row["card_id"], basic_time: row["basic_time"], 
-                              work_time: row["work_time"], work_time_finish: row["work_time_finish"], superior: row["superior"], admin: row["admin"], password: row["password"]})
+            users << ::User.new({ name: row["name"], email: row["email"], department: row["affiliation"], code: row["employee_number"], card_id: row["uid"], basic_time: row["basic_work_time"], 
+                              work_time: row["designated_work_start_time"], work_time_finish: row["designated_work_end_time"], superior: row["superior"], admin: row["admin"], password: row["password"]})
         else
           @errors << user.errors.inspect # inspectメソッドとは、オブジェクトや配列などをわかりやすく文字列で返してくれるメソッド
         end

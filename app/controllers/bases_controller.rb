@@ -2,7 +2,7 @@ class BasesController < ApplicationController
 
   # 拠点一覧ページ
   def index
-    @bases = Base.all
+    @bases = Base.all.order('base_number')
     @base = Base.new
   end
   

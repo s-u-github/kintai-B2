@@ -35,7 +35,7 @@
                         <!-- 変更 -->
                         <td><%= af.check_box :agreement, {}, "true", "false" %></td>
                         <!-- 勤怠を確認する -->
-                        <td><%= link_to "確認", user_path(id: keys, first_day: value.worked_on.beginning_of_month), data: {"turbolinks" => false}, class: "btn btn-primary" %></td>
+                        <td><%= link_to "確認", user_path(id: keys, first_day: value.worked_on.beginning_of_month, modal: :month_info_modal), class: "btn btn-primary" %></td>
                       </tr>
                     <% end %> <!-- fields_for -->
                   <% end %> <!-- each values -->

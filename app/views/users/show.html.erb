@@ -47,7 +47,8 @@
       <!-- お知らせモーダルの確認時に使う -->
       <h3><span class="label label-success">確認: <%= "#{@user.name}/#{params[:first_day].to_date.year}年#{params[:first_day].to_date.month}月" %></span></h3>
       <span data-spy="affix">
-	      <%= link_to "戻る", user_path(current_user.id), class: "btn btn-success" %>
+	      <%= link_to "戻る", user_path(current_user.id, modal: params[:modal]), class: "btn btn-success" %>
+
       </span>
     <% end %>  <!-- if current_user? その1 -->
   
@@ -216,7 +217,7 @@
         <td colspan="2">総合勤務時間: <%= format_basic_time(@user.basic_time).to_f * @worked_sum %></td>
         <td colspan="6"></td>
         <!-- 「在社時間合計 = 在社時間の合計秒数を割ってフォーマットで表示させる」attendanceヘルパーメソッド使用-->
-        <td>在社時間合計: <%= working_time_sum(@total_working_time) unless @total_working_time.nil? %></td> <!-- unless文でまだ存在しない場合にエラーが発生しないように予防 -->
+        <td>在社時間合計: <%= working_time_sum(@total_working_time) unless @total_working_time.nil? %></td> <!-- unless文でまだ存在しない場合にエラーが発生し��いように予防 -->
         <td colspan="5">
         <!-- １ヶ月分の勤怠申請 -->
         <td>
@@ -233,3 +234,40 @@
     </tfoot>
   </table>
 </div>
+
+<script>
+
+  // URLのパラメータを取得
+  var urlParam = location.search.substring(1);
+   
+  // URLにパラメータが存在する場合
+  if(urlParam) {
+    // 「&」が含まれている場合は「&」で分割
+    var param = urlParam.split('&');
+   
+    // パラメータを格納する用の配列を用意
+    var paramArray = [];
+   
+    // 用意した配列にパラメータを格納
+    for (i = 0; i < param.length; i++) {
+      var paramItem = param[i].split('=');
+      paramArray[paramItem[0]] = paramItem[1];
+    }
+   
+    // パラメータmodalがmonth_info_modalかどうかを判断する
+    if (paramArray.modal == 'month_info_modal') {
+      $('#month-info-modal').modal();
+    }
+    
+    // パラメータmodalがattendance_info_modalかどうかを判断する
+    if (paramArray.modal == 'attendance_info_modal') {
+      $('#attendance-info-modal').modal();
+    }
+    
+    // パラメータmodalがovertime_info_modalかどうかを判断する
+    if (paramArray.modal == 'overtime_info_modal') {
+      $('#overtime-info-modal').modal();
+    }
+  }
+  
+</script>

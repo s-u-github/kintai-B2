@@ -212,7 +212,6 @@ class UsersController < ApplicationController
                               work_time: row["work_time"], work_time_finish: row["work_time_finish"], superior: row["superior"], admin: row["admin"], password: row["password"]})
         else
           @errors << user.errors.inspect # inspectメソッドとは、オブジェクトや配列などをわかりやすく文字列で返してくれるメソッド
-          Rails.logger.warn(user.errors.inspect)
         end
       end
       # importメソッドでバルクインサートできる(gem 'activerecord-import'が必要)

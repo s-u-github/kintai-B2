@@ -109,6 +109,12 @@ th {
   text-align: center;
 }
 
+.table-head {
+  th {
+  vertical-align: bottom;
+  }
+}
+
 /* form */
 
 input, textarea, select, .uneditable-input {
@@ -186,6 +192,12 @@ input, textarea, select, .uneditable-input {
 
 .btn-top {
   margin-top: 10px;
+}
+
+.btn-info-modal {
+  display:block;
+  width: 40%;
+  margin: 0 auto;
 }
 
 /* font-color */

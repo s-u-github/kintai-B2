@@ -37,7 +37,7 @@
               アカウント <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><%= link_to "アカウント情報の更新", edit_user_path(current_user) %></li>  <!-- 現在のユーザー情報が取得できるようcurrent_userを引数で渡している -->
+              <li><%= link_to "設定", edit_user_path(current_user) %></li>  <!-- 現在のユーザー情報が取得できるようcurrent_userを引数で渡している -->
               <li class="divider"></li>
               <li>
                 <%= link_to "ログアウト", logout_path, method: :delete %>

@@ -29,6 +29,7 @@ class User < ApplicationRecord
     end
   end
   
+  
   # remember
   
   # 渡された文字列のハッシュ値を返す

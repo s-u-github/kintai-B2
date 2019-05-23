@@ -40,7 +40,9 @@ module AttendancesHelper
 
   # 残業承認の表示
   def overtime_display(date)
-    if date.over_order_id == "上司A" || date.over_order_id == "上司B" || date.over_order_id == "上司C" || date.over_order_id == "上司D"
+    # supeior_userの名前だけ格納する配列nameを作成
+    name = User.superior_user_list_non_self(session).map { |name| name[:name] }
+    if name.index(date.over_order_id) # 配列nameの中にdate.over_order_idの申請者の名前があるかどうか
       "残業申請中：#{date.over_order_id}"
     elsif date.over_order_id == "承認"
       "残業承認済：#{date.over_order_status}"
@@ -51,7 +53,8 @@ module AttendancesHelper
 
   # 勤怠変更承認の表示
   def attendance_display(date)
-    if date.attendance_order_id == "上司A" || date.attendance_order_id == "上司B" || date.attendance_order_id == "上司C" || date.attendance_order_id == "上司D"
+    name = User.superior_user_list_non_self(session).map { |name| name[:name] }
+    if name.index(date.attendance_order_id)
       "勤怠編集申請中：#{date.attendance_order_id}"
     elsif date.attendance_order_id == "承認"
       "勤怠編集承認済：#{date.attendance_order_status}"
@@ -64,7 +67,8 @@ module AttendancesHelper
   def current_month_status(day)
     @user = User.find(params[:id])
     @attendance = @user.attendances.find_by(worked_on: day)
-    if @attendance.month_order_id == "上司A" || @attendance.month_order_id == "上司B" || @attendance.month_order_id == "上司C" || @attendance.month_order_id == "上司D"
+    name = User.superior_user_list_non_self(session).map { |name| name[:name] }
+    if name.index(@attendance.month_order_id)
       "#{@attendance.month_order_id}に申請中"
     elsif @attendance.month_order_id == "承認" &&  @attendance.month_order_status.present?
       "#{@attendance.month_order_status}から承認済"

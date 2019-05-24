@@ -20,7 +20,7 @@ class AttendancesController < ApplicationController
   def edit
     # ルーティングで割り当てたパラメータからそれぞれのインスタンス変数に値を代入できるように設定している。
     @user = User.find(params[:id])
-    @first_day = first_day(params[:first_day])
+    @first_day = first_day(params[:date])
     @last_day = @first_day.end_of_month
     @week = %w{日 月 火 水 木 金 土}
     @dates = user_attendances_month_date

@@ -129,7 +129,9 @@ class AttendancesController < ApplicationController
   # csv出力
   def csv_output
     @user = User.find(current_user.id)
-    @attendances = @user.attendances.all
+    @first_day = first_day(params[:first_day])
+    @last_day = @first_day.end_of_month
+    @attendances = user_attendances_month_date
     send_data render_to_string, filename: "#{@user.name}の勤怠情報.csv", type: :csv
   end
   

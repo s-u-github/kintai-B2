@@ -188,7 +188,10 @@ class UsersController < ApplicationController
     
     # 管理者かどうか確認
     def admin_user
-      redirect_to(root_url) unless current_user.admin?
+      unless current_user.admin?
+        flash[:danger] = "管理者権限がありません。"
+        redirect_to(root_url)
+      end
     end
     
     # 管理者はNG

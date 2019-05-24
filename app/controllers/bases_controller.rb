@@ -1,4 +1,5 @@
 class BasesController < ApplicationController
+  before_action :admin_user,     only: [:index, :new, :create, :update, :edit, :destroy]
 
   # 拠点一覧ページ
   def index
@@ -45,4 +46,13 @@ class BasesController < ApplicationController
   def base_params
     params.require(:base).permit(:base_number, :base_name, :base_info)
   end
+  
+  # 管理者かどうか確認
+    def admin_user
+      unless current_user.admin?
+        flash[:danger] = "管理者権限がありません。"
+        redirect_to(root_url)
+      end
+    end
+    
 end

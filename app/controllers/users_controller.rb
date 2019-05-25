@@ -99,11 +99,15 @@ class UsersController < ApplicationController
   # ユーザーの更新
   def update
     # correct_userで定義したため削除していい
-    # @user = User.find(params[:id])
+    @user = User.find(params[:id])
     # update_attributesには引数としてuser_pramsを渡し、無効な情報だった場合はfalseが返ってくるのでそれを利用してif~else文を構築
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
-      redirect_to @user
+      if current_user.admin?
+        redirect_to users_path
+      else
+        redirect_to @user
+      end
     else
       render 'edit'
     end
@@ -112,8 +116,14 @@ class UsersController < ApplicationController
   # ユーザーの削除
   def destroy
     if current_user.admin?
-      User.find(params[:id]).destroy
-      flash[:success] = "削除しました。"
+      @user = User.find(params[:id])
+      if @user.admin == true
+        flash[:danger] = "管理者は削除できません。"
+      else
+        @user.destroy
+        flash[:success] = "削除しました。"
+      end
+      
     else
       flash[:danger] = "管理者しか削除できません。"
     end

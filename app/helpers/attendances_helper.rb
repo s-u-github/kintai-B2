@@ -99,16 +99,18 @@ module AttendancesHelper
   def attendances_invalid? # attendances_invalid?は真偽値（true, false）を返す
     attendances = true
     attendances_params.each do |id, item|
-      if item[:started_at].blank? && item[:finished_at].blank?
-        next # nextは繰り返し処理の中で呼び出されると、その後の処理をスキップしつつ、繰り返し処理自体は続行。
-      elsif item[:started_at].blank? || item[:finished_at].blank?
-        attendances = false
-        break # breakは単純に繰り返し処理を中断する。
-      elsif item[:started_at] > item[:finished_at] && item[:next_day] == "true" # 翌日テェックがtrueの場合はOK
-        break
-      elsif item[:started_at] > item[:finished_at]
-        attendances = false
-        break
+      if item[:attendance_order_id] != ""
+        if item[:started_at].blank? && item[:finished_at].blank?
+          next # nextは繰り返し処理の中で呼び出されると、その後の処理をスキップしつつ、繰り返し処理自体は続行。
+        elsif item[:started_at].blank? || item[:finished_at].blank?
+          attendances = false
+          break # breakは単純に繰り返し処理を中断する。
+        elsif item[:started_at] > item[:finished_at] && item[:next_day] == "true" # 翌日テェックがtrueの場合はOK
+          break
+        elsif item[:started_at] > item[:finished_at]
+          attendances = false
+          break
+        end
       end
     end
     return attendances

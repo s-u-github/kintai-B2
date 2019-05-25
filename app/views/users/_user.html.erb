@@ -20,7 +20,7 @@
             <div class="panel-body">
               <%= form_for user, url: update_index_user_path(user), method: :patch do |f| %>
               <% @user = User.find(user.id) %>
-              <%= render 'shared/error_messages', object: @user %>   <!-- 登録失敗時のエラーメッセージ -->
+              <%= render 'shared/error_messages' %>   <!-- 登録失敗時のエラーメッセージ -->
               
                 <!-- 名前 -->
                 <%= f.label :name %>
@@ -45,6 +45,10 @@
                 <!-- パスワード -->
                 <%= f.label :password %>
                 <%= f.password_field :password, class: 'form-control' %>
+  
+                <!-- パスワード確認 -->
+                <%= f.label :password_confirmation %>
+                <%= f.password_field :password_confirmation, class: 'form-control' %>
   
                 <!-- 基本勤務時間 -->
                 <%= f.label :basic_time %>

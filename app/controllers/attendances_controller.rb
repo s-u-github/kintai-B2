@@ -33,11 +33,10 @@ class AttendancesController < ApplicationController
     if attendances_invalid?
       attendances_params.each do |key, value| # idと値
         attendance = Attendance.find(key) # idを使い更新対象となるAttendanceモデルのデータを取得
-        if value[:attendance_order_id] != "" && attendance.started_at == nil && attendance.finished_at == nil  # started_at,finished_atがnilならそのまま入力値を入れる
-          attendance.update_attributes(started_at: value[:started_at], finished_at: value[:finished_at], started_at_after: value[:started_at], finished_at_after: value[:finished_at],
-                                          next_day: value[:next_day], note: value[:note], attendance_order_id: value[:attendance_order_id])
-        elsif value[:attendance_order_id] == ""
-          next
+        if value[:attendance_order_id] == ""
+          attendance.update_attributes(started_at: value[:started_at], finished_at: value[:finished_at],next_day: value[:next_day],
+                                        note: value[:note], attendance_order_id: value[:attendance_order_id]) # 編集した値に更新する
+                                        
         else
           attendance.update_attributes(started_at_after: value[:started_at], finished_at_after: value[:finished_at],next_day: value[:next_day],
                                         note: value[:note], attendance_order_id: value[:attendance_order_id]) # 編集した値に更新する

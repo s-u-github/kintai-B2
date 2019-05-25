@@ -2,9 +2,9 @@ class UsersController < ApplicationController
   # ログイン済みでなければ実行できない
   before_action :logged_in_user, only: [:index, :edit, :update]
   # 正しいユーザーでなければ実行できない
-  before_action :correct_user,   only: [:edit, :update]
+  before_action :correct_user,   only: [:edit]
   # 管理者でなければ実行できない
-  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index]
+  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index, :update_index]
   # 管理者はNG
   before_action :not_admin_user, only: [:show, :edit]
   
@@ -164,7 +164,7 @@ class UsersController < ApplicationController
   
     # ユーザ一覧の更新で使用
     def users_params
-      params.require(:user).permit(:name, :email, :department, :password, :code, :card_id, :surperior, :basic_time, :work_time, :work_time_finish)
+      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation, :code, :card_id, :surperior, :basic_time, :work_time, :work_time_finish)
     end
   
     # beforeアクション
@@ -183,7 +183,7 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       # 後付けif文の構成と一緒で、条件式がfalseの場合のみ、冒頭のコードが実行される、current_user?はsessonヘルパーメソッド
-      redirect_to(root_url) unless current_user?(@user)
+        redirect_to(root_url) unless current_user?(@user)
     end
     
     # 管理者かどうか確認

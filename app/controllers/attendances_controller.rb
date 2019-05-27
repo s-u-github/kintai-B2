@@ -1,6 +1,9 @@
 class AttendancesController < ApplicationController
   # 管理者はNG
   before_action :not_admin_user, only: [:edit]
+  # 管理者でなければ実行できない
+  before_action :admin_user,     only: [:attendance_list]
+  
   
   # 勤怠情報を更新
   def create
@@ -165,6 +168,14 @@ class AttendancesController < ApplicationController
     # １ヶ月分の勤怠申請お知らせの更新で使用
     def update_month_info_params
       params.permit(attendances: [:month_order_id, :agreement])[:attendances]
+    end
+    
+    # 管理者かどうか確認
+    def admin_user
+      unless current_user.admin?
+        flash[:danger] = "管理者権限がありません。"
+        redirect_to(root_url)
+      end
     end
     
     # 管理者はNG

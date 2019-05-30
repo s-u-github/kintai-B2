@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index, :update_index]
   # 管理者はNG
   before_action :not_admin_user, only: [:show, :edit]
+  before_action :superior_user, only: [:show]
   
   # ユーザー一覧ページ
   def index
@@ -207,6 +208,22 @@ class UsersController < ApplicationController
     # 管理者はNG
     def not_admin_user
       redirect_to(root_url) if current_user.admin?
+    end
+    
+    # 自分か上長か
+    def superior_user
+      @user = User.find(params[:id])
+      @first_day = first_day(params[:first_day])
+      unless current_user?(@user)
+        unless current_user.superior?
+          flash[:danger] = "閲覧権限がありません。"
+          redirect_to user_path(id: current_user.id, finst_day: @first_day)
+        else
+          unless params[:first_day].present?
+            redirect_to user_path(id: current_user.id, first_day: @first_day)
+          end
+        end
+      end
     end
     
     # CSVインポート
